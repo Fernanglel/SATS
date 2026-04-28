@@ -31,26 +31,27 @@ import { EmailDecorator } from './decorators/EmailDecorator.js';
 // ==================== LOGIN ====================
 
 // Se hace global para poder usarlo en HTML
-window.login = function(){
-
-    console.log("LOGIN EJECUTADO");
+window.login = async function(){
 
     const rfc = document.getElementById("usuario")?.value.trim().toUpperCase();
     const password = document.getElementById("password")?.value.trim();
 
-    console.log("RFC:", rfc);
-    console.log("PASS:", password);
+    const res = await fetch("/login/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ rfc, password })
+    });
 
-    const resultado = loginUsuario(rfc, password);
+    const data = await res.json();
 
-    console.log("RESULTADO:", resultado);
-
-    if(!resultado.ok){
-        alert(resultado.mensaje);
+    if(!data.ok){
+        alert(data.mensaje);
         return;
     }
 
-    console.log("REDIRIGIENDO...");
+    // ✅ SI TODO BIEN
     window.location.href = "/home/";
 };
 
@@ -142,6 +143,37 @@ window.cargarFactura = function(){
     document.getElementById("subtotal").innerText = "$" + d.subtotal;
     document.getElementById("iva").innerText = "$" + d.iva;
     document.getElementById("total").innerText = "$" + d.total;
+
+    // 🔥 GUARDAR EN BD (AQUÍ VA EL FETCH)
+    fetch("/guardar-factura/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            rfcEmisor: d.rfcEmisor,
+            nombreEmisor: d.nombreEmisor,
+            rfcReceptor: d.rfcReceptor,
+            nombreReceptor: d.nombreReceptor,
+            folio: d.folio,
+            clave: d.clave,
+            subtotal: d.subtotal,
+            iva: d.iva,
+            total: d.total,
+            claveConcepto: d.clave,
+            descripcion: d.descripcion,
+            cantidad: d.cantidad,
+            precio: d.precio,
+            importe: d.importe
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("GUARDADO EN BD:", data);
+    })
+    .catch(err => {
+        console.error("ERROR AL GUARDAR:", err);
+    });
 };
 
 
