@@ -1,0 +1,89 @@
+body {
+    margin: 0;
+    font-family: 'Open Sans', Arial;
+    background-color: #f5f5f5;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #7a1f2b;
+    color: white;
+    padding: 15px 40px;
+    font-size: 18px;
+}
+
+.sat-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sat-container {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.sat-container h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.btn-principal {
+    width: 100%;
+    padding: 12px;
+    background-color: #7a1f2b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-principal:hover {
+    background-color: #5c1720;
+}
+
+.links {
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+.links a {
+    color: #7a1f2b;
+    text-decoration: none;
+}
+
+.linea {
+    width: 100%;
+    height: 4px;
+    background-color: #c9a96a;
+}
+
+.footer-decor {
+    width: 100%;
+    height: 80px;
+    background-color: #7a1f2b;
+
+    background-image: radial-gradient(circle at 20% 20%, #a03a4a 10%, transparent 10%),
+                      radial-gradient(circle at 80% 40%, #a03a4a 10%, transparent 10%),
+                      radial-gradient(circle at 40% 80%, #a03a4a 10%, transparent 10%);
+    background-size: 100px 100px;
+}
