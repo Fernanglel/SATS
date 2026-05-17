@@ -24,5 +24,8 @@ urlpatterns = [
     path('factura/', views.factura, name='factura'),
     path('guardar-factura/', views.guardar_factura),
     path('login/', views.login_view),
+    path('obtener-datos-factura/',
+    views.obtener_datos_factura
+),
 ]
 

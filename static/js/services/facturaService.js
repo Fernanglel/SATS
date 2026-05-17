@@ -1,8 +1,6 @@
 import {
     generarFolio,
-    generarClave,
-    randomNombre,
-    randomRFC
+    generarClave
 }
 from '../utils/generadores.js';
 
@@ -13,37 +11,22 @@ from '../factory/UsuarioFactory.js';
 
 // ==================== GENERAR FACTURA ====================
 
-export function generarFacturaAleatoria() {
+export async function generarFacturaAleatoria() {
 
-    console.log(
-        "TIPO USUARIO:",
-        localStorage.getItem("tipoUsuario")
-    );
+    const rfc =
+        localStorage.getItem("rfc");
 
-    const tipoUsuario =
-        localStorage.getItem("tipoUsuario");
+    // CONSULTA A DJANGO
+    const response =
+        await fetch(
+            `/obtener-datos-factura/?rfc=${rfc}`
+        );
 
-    // FACTORY METHOD
-    const usuario =
-        UsuarioFactory.crearUsuario(tipoUsuario);
+    const bd =
+        await response.json();
 
-    console.log("USUARIO:", usuario);
+    console.log("DATOS BD:", bd);
 
-    // GENERAR FACTURA
-    const emisor =
-        usuario.generarFactura();
-
-    console.log("EMISOR:", emisor);
-
-    // RECEPTOR
-    const receptor = {
-
-        rfc: randomRFC('fisica'),
-
-        nombre: randomNombre()
-    };
-
-    // DATOS
     const cantidad =
         Math.floor(Math.random() * 10 + 1);
 
@@ -58,34 +41,46 @@ export function generarFacturaAleatoria() {
 
     const datos = {
 
-        rfcEmisor: emisor.rfc,
-        nombreEmisor: emisor.nombre,
+        // EMISOR DESDE BD
+        rfcEmisor:
+            bd.emisor.rfc,
 
-        rfcReceptor: receptor.rfc,
-        nombreReceptor: receptor.nombre,
+        nombreEmisor:
+            bd.emisor.nombre,
+
+        // RECEPTOR ALEATORIO DESDE BD
+        rfcReceptor:
+            bd.receptor.rfc,
+
+        nombreReceptor:
+            bd.receptor.nombre,
 
         descripcion:
-            localStorage.getItem("tipoFactura")
-            || "Ingreso",
+            localStorage.getItem("tipoFactura") || "Ingreso",
 
         cantidad,
         precio,
 
-        importe: subtotal,
+        importe:
+            subtotal,
 
         subtotal,
+
         iva,
 
-        total: subtotal + iva,
+        total:
+            subtotal + iva,
 
-        fecha: new Date().toLocaleString(),
+        fecha:
+            new Date().toLocaleString(),
 
-        folio: generarFolio(),
+        folio:
+            generarFolio(),
 
-        clave: generarClave()
+        clave:
+            generarClave()
     };
 
-    // LOCAL STORAGE
     localStorage.setItem(
         "factura",
         JSON.stringify(datos)

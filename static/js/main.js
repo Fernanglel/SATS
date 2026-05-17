@@ -19,6 +19,9 @@ import { EmailDecorator } from '/static/js/decorators/EmailDecorator.js';
 //factory
 import { UsuarioFactory } from './factory/UsuarioFactory.js';
 
+//state
+import { FacturaState } from './state/FacturaState.js';
+
 // ==================== LOGIN ====================
 
 window.login = async function () {
@@ -53,6 +56,9 @@ window.login = async function () {
 
     // LOGIN CORRECTO
    if (data.ok) {
+
+    // GUARDAR RFC
+    localStorage.setItem("rfc", rfc);
 
     // DETECTAR TIPO
     let tipoUsuario = "";
@@ -143,18 +149,37 @@ window.irFactura = function(){
 
 };
 
-// ==================== CARGAR FACTURA ====================
 
-window.cargarFactura = function(){
+// ==================== CARGAR FACTURA ====================
+window.cargarFactura = async function(){
 
     console.log("ENTRANDO A CARGAR FACTURA");
 
-    const d = generarFacturaAleatoria();
+    const d = await generarFacturaAleatoria();
 
     console.log("DATOS:", d);
 
     if(!d) return;
+    // ==================== STATE ====================
 
+const facturaEstado =
+    new FacturaState();
+
+// Estado inicial
+facturaEstado.siguiente();
+
+// Pagada
+facturaEstado.pagar();
+
+const estadoHTML =
+    document.getElementById("estadoFactura");
+
+if(estadoHTML){
+
+    estadoHTML.innerText =
+        facturaEstado.obtenerEstado();
+}
+//
     // EMISOR
     document.getElementById("rfcEmisor").innerText = d.rfcEmisor;
     document.getElementById("nombreEmisor").innerText = d.nombreEmisor;
@@ -179,7 +204,7 @@ window.cargarFactura = function(){
     document.getElementById("iva").innerText = "$" + d.iva;
     document.getElementById("total").innerText = "$" + d.total;
 
-    // 🔥 GUARDAR EN BD (AQUÍ VA EL FETCH)
+    //  GUARDAR EN BD (AQUÍ VA EL FETCH)
     fetch("/guardar-factura/", {
         method: "POST",
         headers: {

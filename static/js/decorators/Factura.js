@@ -30,7 +30,7 @@ export class Factura {
         ];
 
         try {
-            const res = await fetch("http://localhost:3000/factura", {
+            const res = await fetch("/guardar-factura/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
