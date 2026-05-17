@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Factura </title>
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'Styles/Home.css' %}">
+</head>
+
+<body>
+
+<header>
+    <h1>| SAT</h1>
+</header>
+
+<div class="container">
+    
+    <h2>Factura</h2>
+    
+    <p class="descripcion">
+        En el SAT se facturan principalmente todas las operaciones económicas formales, como la venta de productos (mercancías, equipos, artículos), la prestación de servicios profesionales y generales (asesorías, mantenimiento, transporte), los arrendamientos de bienes (renta de casas, locales u oficinas), los honorarios de personas independientes, los pagos recibidos cuando una operación se liquida en parcialidades, las devoluciones o descuentos mediante facturas de egreso, las nóminas por el pago a empleados, los traslados de mercancías aun sin venta directa y las retenciones de impuestos aplicadas a terceros, ya que todas estas actividades deben registrarse para efectos fiscales.
+    </p>
+
+    <h3>¿Para qué sirven?</h3>
+
+    <p class="descripcion">
+        Las facturas sirven para comprobar de manera legal y fiscal que una operación se realizó, permiten declarar ingresos y gastos ante la autoridad, ayudan a deducir impuestos y reducir la carga fiscal de forma legal, funcionan como respaldo en caso de aclaraciones o problemas entre las partes y facilitan el control financiero de una persona o empresa al llevar un registro ordenado de sus operaciones económicas.
+    </p>
+
+    <h2>Inicia el trámite</h2>
+    <div id="tiposFactura"></div>
+    <br>
+    <button onclick="irFactura()">Continuar</button>
+
+</div>
+<div id="facturaContainer" style="display:none;">
+
+    <h2>Opciones de Factura</h2>
+
+    <ul id="listaOpciones"></ul>
+
+</div>
+<!-- LINEA + DECORACION FINAL -->
+<div class="linea"></div>
+<div class="footer-decor"></div>
+
+
+<script type="module" src="{% static 'js/main.js' %}"></script>
+
+
+</body>
+</html>
