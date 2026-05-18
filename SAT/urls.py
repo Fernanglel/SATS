@@ -16,16 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from home import views
+from home import controllers
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name="index_view"),
-    path('home/', views.home_view, name='home'),
-    path('factura/', views.factura, name='factura'),
-    path('guardar-factura/', views.guardar_factura),
-    path('login/', views.login_view),
-    path('obtener-datos-factura/',
-    views.obtener_datos_factura
-),
+
+    path('', controllers.index_controller, name="index_view"),
+    path('home/', controllers.home_controller, name='home'),
+    path('factura/', controllers.factura_controller, name='factura'),
+    path('guardar-factura/', controllers.guardar_factura_controller),
+    path('login/', controllers.login_controller),
+    path('obtener-datos-factura/', controllers.obtener_datos_factura_controller),
 ]
 
