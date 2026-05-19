@@ -3,98 +3,243 @@
 <head>
 <meta charset="utf-8">
 <title>Factura</title>
+
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'Styles/Factura.css' %}">
+<link rel="stylesheet" href="{% static 'styles/Factura.css' %}">
+
 </head>
 
 <body>
 
-<div class="container" id="facturaPDF">
-    <h3 id="estadoFactura"></h3>
-    <!-- HEADER -->
-    <div class="header">
+<div class="page">
+
+    <!-- ================= HEADER ================= -->
+    <div class="topbar">
+
         <div>
-            <h2>FACTURA</h2>
-            <b>RFC Emisor:</b> <span id="rfcEmisor"></span><br>
-            <b>Nombre:</b> <span id="nombreEmisor"></span>
+            <h1>Factura Electrónica</h1>
+            <p class="subtitle">
+                Sistema Administrativo Tributario SATS
+            </p>
         </div>
 
-        <div class="folio-box">
-            <b>Folio:</b> <span id="folio"></span><br>
-            <b>Clave:</b> <span id="clave"></span><br>
-            <b>Fecha:</b> <span id="fecha"></span>
-        </div>
+        <div class="factura-banner">
+
+    <div>
+        <h1>FACTURA CFDI 4.0</h1>
+        <p>Sistema Administrativo Tributario SATS</p>
     </div>
 
-    <hr>
-
-    <!-- RECEPTOR -->
-    <div class="receptor">
-        <b>RFC Receptor:</b> <span id="rfcReceptor"></span><br>
-        <b>Nombre:</b> <span id="nombreReceptor"></span><br>
-        <b>Uso CFDI:</b> G03
-    </div>
-
-    <!-- TABLA -->
-    <h3>Conceptos</h3>
-
-    <table>
-        <tr>
-            <th>Clave</th>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Importe</th>
-        </tr>
-        <tr>
-            <td>10101504</td>
-            <td id="descripcion"></td>
-            <td id="cantidad"></td>
-            <td id="precio"></td>
-            <td id="importe"></td>
-        </tr>
-    </table>
-
-    <!-- TOTALES -->
-    <div class="total">
-        Subtotal: <span id="subtotal"></span><br>
-        IVA (16%): <span id="iva"></span><br>
-        <b>Total: <span id="total"></span></b>
+    <div class="estado-badge">
+        TIMBRADA
     </div>
 
 </div>
 
-<!-- BOTONES -->
-<div class="acciones">
-    <h3>Descargar factura:</h3>
+    </div>
 
-    <label><input type="checkbox" value="pdf"> PDF</label>
-    <label><input type="checkbox" value="xml"> XML</label>
-    <label><input type="checkbox" value="json"> JSON</label>
-    <label><input type="checkbox" value="txt"> TXT</label>
-    <label><input type="checkbox" value="qr"> QR</label>
-    <label><input type="checkbox" value="email"> Email</label>
+    <!-- ================= CONTENIDO ================= -->
+    <div class="content">
 
-    <br><br>
+        <!-- ================= FACTURA ================= -->
+        <div class="factura-card" id="facturaPDF">
 
+            <div class="header-factura">
 
-    <button onclick="generarDecoradores()">Generar y Descargar</button>
-    <p id="resultadoDecorador"></p>
+                <div>
+                    <h2>FACTURA</h2>
+
+                    <p>
+                        <strong>RFC Emisor:</strong>
+                        <span id="rfcEmisor"></span>
+                    </p>
+
+                    <p>
+                        <strong>Nombre:</strong>
+                        <span id="nombreEmisor"></span>
+                    </p>
+                </div>
+
+                <div class="folio-box">
+
+                    <p>
+                        <strong>Folio:</strong>
+                        <span id="folio"></span>
+                    </p>
+
+                    <p>
+                        <strong>Clave:</strong>
+                        <span id="clave"></span>
+                    </p>
+
+                    <p>
+                        <strong>Fecha:</strong>
+                        <span id="fecha"></span>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- RECEPTOR -->
+            <div class="receptor">
+
+                <p>
+                    <strong>RFC Receptor:</strong>
+                    <span id="rfcReceptor"></span>
+                </p>
+
+                <p>
+                    <strong>Nombre:</strong>
+                    <span id="nombreReceptor"></span>
+                </p>
+
+                <p>
+                    <strong>Uso CFDI:</strong>
+                    G03
+                </p>
+
+            </div>
+
+            <!-- TABLA -->
+            <h3>Conceptos</h3>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Clave</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>10101504</td>
+                        <td id="descripcion"></td>
+                        <td id="cantidad"></td>
+                        <td id="precio"></td>
+                        <td id="importe"></td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <!-- TOTALES -->
+            <div class="totales">
+
+                <p>
+                    Subtotal:
+                    <span id="subtotal"></span>
+                </p>
+
+                <p>
+                    IVA (16%):
+                    <span id="iva"></span>
+                </p>
+
+                <h2>
+                    Total:
+                    <span id="total"></span>
+                </h2>
+
+            </div>
+            <!-- ================= TIMBRADO ================= -->
+        <div class="timbrado-panel">
+
+            <h2>Timbrado SAT</h2>
+            <div class="acciones-timbrado no-pdf">
+            <div class="acciones-timbrado">
+
+                <button class="btn btn-primary"
+                    onclick="timbrarFactura()">
+                    Timbrar
+                </button>
+
+                <button class="btn btn-success"
+                    onclick="pagarFactura()">
+                    Pagar
+                </button>
+
+                <button class="btn btn-danger"
+                    onclick="cancelarFactura()">
+                    Cancelar
+                </button>
+
+            </div>
+            </div>
+
+            <div class="timbrado-box">
+                <div class="sat-badge">
+                     DOCUMENTO TIMBRADO POR EL SAT
+                </div>
+                <div class="campo">
+                    <label>UUID</label>
+                    <input type="text" id="uuid" readonly>
+                </div>
+
+                <div class="campo">
+                    <label>Fecha Timbrado</label>
+                    <input type="text" id="fechaTimbrado" readonly>
+                </div>
+
+                <div class="campo">
+                    <label>Sello Digital</label>
+                    <textarea id="selloDigital" rows="5" readonly></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Cadena Original</label>
+                    <textarea id="cadenaOriginal" rows="4" readonly></textarea>
+                </div>
+
+            </div>
+        </div>
+
+        
+
+            <!-- DECORATORS -->
+            <div class="decoradores">
+
+                <h3>Descargar factura</h3>
+
+                <div class="checks">
+
+                    <label><input type="checkbox" value="pdf"> PDF</label>
+                    <label><input type="checkbox" value="xml"> XML</label>
+                    <label><input type="checkbox" value="json"> JSON</label>
+                    <label><input type="checkbox" value="txt"> TXT</label>
+                    <label><input type="checkbox" value="qr"> QR</label>
+                    <label><input type="checkbox" value="email"> Email</label>
+
+                </div>
+
+                <button class="btn btn-download"
+                    onclick="generarDecoradores()">
+                    Generar y Descargar
+                </button>
+
+                <p id="resultadoDecorador"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<!-- LIBRERÍA PDF -->
+<!-- PDF -->
 <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 
 <!-- MAIN -->
 <script type="module" src="{% static 'js/main.js' %}"></script>
-
-</body>
-</html>
-<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
-
-
-
 
 </body>
 </html>

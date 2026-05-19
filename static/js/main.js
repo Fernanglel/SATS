@@ -21,7 +21,22 @@ import { UsuarioFactory } from './factory/UsuarioFactory.js';
 
 //state
 import { FacturaState } from './state/FacturaState.js';
+let facturaEstado = new FacturaState();
+function actualizarEstadoVisual(){
 
+    const estadoHTML = document.getElementById("estadoFactura");
+    if(!estadoHTML) return;
+
+    const estado = facturaEstado.obtenerEstado();
+
+    estadoHTML.innerText = estado;
+
+    estadoHTML.style.color =
+        estado === "Pendiente" ? "orange" :
+        estado === "Timbrada" ? "blue" :
+        estado === "Pagada" ? "green" :
+        estado === "Cancelada" ? "red" : "black";
+}
 // ==================== LOGIN ====================
 
 window.login = async function () {
@@ -149,6 +164,133 @@ window.irFactura = function(){
 
 };
 
+// ==================== TIMBRAR ====================
+
+window.timbrarFactura = function(){
+
+    facturaEstado.siguiente();
+
+    actualizarEstadoVisual();
+
+    // UUID
+    const uuid = generarUUID();
+
+    // FECHA
+    const fecha =
+        new Date().toLocaleString();
+
+    // SELLO
+    const sello =
+        generarSello();
+
+    // CADENA
+    const cadena =
+        generarCadena({
+
+            uuid: uuid,
+
+            fecha: fecha,
+
+            total:
+                document.getElementById("total").innerText,
+
+            rfc:
+                document.getElementById("rfcEmisor").innerText
+        });
+
+    // MOSTRAR
+    document.getElementById("uuid")
+        .innerText = uuid;
+
+    document.getElementById("fechaTimbrado")
+        .innerText = fecha;
+
+    document.getElementById("selloDigital")
+        .value = sello;
+
+    document.getElementById("cadenaOriginal")
+        .value = cadena;
+
+    mostrarModal("Factura Timbrada");
+}
+
+// ==================== PAGAR ====================
+
+window.pagarFactura = function(){
+
+    facturaEstado.pagar();
+
+    actualizarEstadoVisual();
+
+    mostrarModal("Factura Pagada");
+}
+
+// ==================== CANCELAR ====================
+
+window.cancelarFactura = function(){
+
+    facturaEstado.cancelar();
+
+    actualizarEstadoVisual();
+
+    mostrarModal("Factura Cancelada");
+}
+
+//====================== Timbrar ==============================
+function generarUUID(){
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    .replace(/[xy]/g, function(c){
+
+        const r = Math.random() * 16 | 0;
+
+        const v = c === 'x'
+            ? r
+            : (r & 0x3 | 0x8);
+
+        return v.toString(16);
+    });
+}
+
+function generarCadena(datos){
+
+    return `||1.1|${datos.uuid}|${datos.fecha}|${datos.total}|${datos.rfc}|SAT||`;
+}
+
+//=================== Sello digital ===========================
+function generarSello(){
+
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    let sello = "";
+
+    for(let i = 0; i < 250; i++){
+
+        sello += chars.charAt(
+            Math.floor(Math.random() * chars.length)
+        );
+    }
+
+    return sello;
+}
+
+// ====================== Modal ======================
+function mostrarModal(texto){
+
+    document.getElementById("tituloModal")
+        .innerText = texto;
+
+    document.getElementById("modalEstado")
+        .style.display = "flex";
+}
+
+window.cerrarModal = function(){
+
+    document.getElementById("modalEstado")
+        .style.display = "none";
+}
+
 
 // ==================== CARGAR FACTURA ====================
 window.cargarFactura = async function(){
@@ -159,27 +301,46 @@ window.cargarFactura = async function(){
 
     console.log("DATOS:", d);
 
+    const uuid = generarUUID();
+    const fecha = new Date().toLocaleString();
+    const sello = generarSello();
+
+    document.getElementById("uuid").value = uuid;
+    document.getElementById("fechaTimbrado").value = fecha;
+    document.getElementById("selloDigital").value = sello;
+
+    document.getElementById("cadenaOriginal").value =
+    generarCadena({
+        uuid,
+        fecha,
+        total: d.total,
+        rfc: d.rfcEmisor
+    });
+    const fechaTimbrado = new Date().toLocaleString();
+    const selloDigital = generarSello();
+
+    const cadenaOriginal = generarCadena({
+    uuid,
+    fecha: fechaTimbrado,
+    total: d.total,
+    rfc: d.rfcEmisor
+});
     if(!d) return;
-    // ==================== STATE ====================
+    facturaEstado.siguiente();
+    actualizarEstadoVisual();
 
-const facturaEstado =
-    new FacturaState();
-
-// Estado inicial
-facturaEstado.siguiente();
-
-// Pagada
-facturaEstado.pagar();
-
-const estadoHTML =
-    document.getElementById("estadoFactura");
-
-if(estadoHTML){
-
-    estadoHTML.innerText =
-        facturaEstado.obtenerEstado();
-}
+    localStorage.setItem(
+    "factura",
+    JSON.stringify(d)
+);
 //
+
+    //
+    d.uuid = uuid;
+    d.fechaTimbrado = fechaTimbrado;
+    d.selloDigital = selloDigital;
+    d.cadenaOriginal = cadenaOriginal;
+    d.estado = "Timbrada";
     // EMISOR
     document.getElementById("rfcEmisor").innerText = d.rfcEmisor;
     document.getElementById("nombreEmisor").innerText = d.nombreEmisor;
@@ -201,9 +362,14 @@ if(estadoHTML){
 
     // TOTALES
     document.getElementById("subtotal").innerText = "$" + d.subtotal;
-    document.getElementById("iva").innerText = "$" + d.iva;
-    document.getElementById("total").innerText = "$" + d.total;
-
+    document.getElementById("iva").innerText ="$" + Number(d.iva).toFixed(2);
+    document.getElementById("total").innerText ="$" + Number(d.total).toFixed(2);
+    
+    //Cadena
+    document.getElementById("uuid").value = uuid;
+    document.getElementById("fechaTimbrado").value = fechaTimbrado;
+    document.getElementById("selloDigital").value = selloDigital;
+    document.getElementById("cadenaOriginal").value = cadenaOriginal;
     //  GUARDAR EN BD (AQUÍ VA EL FETCH)
     fetch("/guardar-factura/", {
         method: "POST",
