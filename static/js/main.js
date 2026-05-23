@@ -543,98 +543,25 @@ d.precio;
 // ==================== DECORATORS ====================
 
 
-window.generarDecoradores=function(){
+window.generarDecoradores = function () {
 
-const d=
+    const d = JSON.parse(
+        localStorage.getItem("factura")
+    );
 
-JSON.parse(
-localStorage.getItem(
-"factura"
-));
+    if (!d) {
+        alert("No hay factura");
+        return;
+    }
 
-if(!d){
-
-alert(
-"No hay factura"
-);
-
-return;
-}
-
-let factura=
-new Factura(d);
-
-const checks=
-
-document.querySelectorAll(
-".decoradoresOcultos input:checked"
-);
-
-checks.forEach(c=>{
-
-switch(c.value){
-
-case "pdf":
-
-factura=
-new PDFDecorator(
-factura
-);
-
-break;
-
-case "xml":
-
-factura=
-new XMLDecorator(
-factura
-);
-
-break;
-
-case "json":
-
-factura=
-new JSONDecorator(
-factura
-);
-
-break;
-
-case "txt":
-
-factura=
-new TXTDecorator(
-factura
-);
-
-break;
-
-case "email":
-
-factura=
-new EmailDecorator(
-factura
-);
-
-break;
-
-}
-
-});
-
-factura.generar();
-
-}
-    let d = JSON.parse(localStorage.getItem("factura"));
     let factura = new Factura(d);
 
-    // Obtener seleccionados
     const seleccionados = Array.from(
-        document.querySelectorAll("input[type=checkbox]:checked")
+        document.querySelectorAll(
+            ".decoradoresOcultos input:checked"
+        )
     ).map(c => c.value);
 
-    // Mapa de decoradores
     const decoradores = {
         pdf: PDFDecorator,
         xml: XMLDecorator,
@@ -644,17 +571,28 @@ factura.generar();
         email: EmailDecorator
     };
 
-    // Aplicar decoradores dinámicamente
     seleccionados.forEach(op => {
-        factura = new decoradores[op](factura);
+
+        if (decoradores[op]) {
+            factura =
+                new decoradores[op](factura);
+        }
+
     });
 
     factura.generar();
 
-    // Mostrar resultado
-    document.getElementById("resultadoDecorador") &&
-        (document.getElementById("resultadoDecorador").innerText =
-            `Factura generada en: ${seleccionados.join(", ").toUpperCase()}`);
+    const resultado =
+        document.getElementById(
+            "resultadoDecorador"
+        );
+
+    if (resultado) {
+
+        resultado.innerText =
+            `Factura generada en: ${seleccionados.join(", ").toUpperCase()}`;
+    }
+
 };
 
 
