@@ -26,8 +26,10 @@ export function obtenerOpcionesFactura() {
 
         "Egreso",
 
-        "Nómina",
+        "Nomina",
 
-        "Empresarial"
+        "Empresarial",
+
+
     ];
 }

@@ -1,307 +1,354 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter;
+}
+
 body{
-    margin:0;
-    padding:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background:#f4f6f9;
+
+background:#f5f6fa;
 }
+/*Barra SAT*/
+.logo{
 
-.page{
-    padding:30px;
-}
-
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-}
-
-.topbar h1{
-    margin:0;
-    color:#1e293b;
-}
-
-.subtitle{
-    color:#64748b;
-    margin-top:5px;
-}
-
-.estado-badge{
-    background:#f59e0b;
-    color:white;
-    padding:12px 25px;
-    border-radius:30px;
-    font-weight:bold;
-    font-size:18px;
-    box-shadow:0 5px 10px rgba(0,0,0,0.1);
-}
-
-.content{
-    display:flex;
-    gap:30px;
-    align-items:flex-start;
-}
-
-.factura-card{
-    flex:2;
-    background:white;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
-
-.timbrado-panel{
-
-    margin-top: 40px;
-    padding: 30px;
-
-    border: 2px solid #d9d9d9;
-    border-radius: 18px;
-
-    background: #fafafa;
-}
-
-.timbrado-panel h2{
-
-    color: #8B0000;
-    margin-bottom: 25px;
-
-    border-bottom: 2px solid #8B0000;
-    padding-bottom: 10px;
-}
-
-.timbrado-box{
-
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.campo label{
-
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-
-    color: #333;
-}
-
-.campo input,
-.campo textarea{
-
-    width: 100%;
-    padding: 15px;
-
-    border-radius: 12px;
-    border: 1px solid #ccc;
-
-    background: white;
-
-    font-size: 15px;
-}
-
-.campo textarea{
-
-    resize: none;
-    min-height: 110px;
-
-    font-family: monospace;
-    font-size: 13px;
-}
-
-.header-factura{
-    display:flex;
-    justify-content:space-between;
-}
-
-.folio-box{
-    text-align:right;
-}
-
-.receptor{
-    margin-top:20px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-table th{
-    background:#7f1d1d;
-    color:white;
-    padding:12px;
-}
-
-table td{
-    border:1px solid #ddd;
-    padding:10px;
-}
-
-.totales{
-    margin-top:25px;
-    text-align:right;
-}
-
-.totales h2{
-    color:#7f1d1d;
-}
-
-.acciones-timbrado{
-    display:flex;
-    gap:10px;
-    margin-bottom:25px;
-}
-
-.btn{
-    border:none;
-    padding:12px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    color:white;
-    font-weight:bold;
-    transition:0.3s;
-}
-
-.btn:hover{
-    transform:scale(1.05);
-}
-
-.btn-primary{
-    background:#2563eb;
-}
-
-.btn-success{
-    background:#16a34a;
-}
-
-.btn-danger{
-    background:#dc2626;
-}
-
-.btn-download{
-    background:#7c3aed;
-    margin-top:20px;
-    width:100%;
-}
-
-.timbrado-box{
-    margin-top:20px;
-}
-
-.campo{
-    margin-bottom:20px;
-}
-
-.campo label{
-    display:block;
-    font-weight:bold;
-    margin-bottom:8px;
-}
-
-.campo input,
-.campo textarea{
-    width:100%;
-    padding:12px;
-    border:1px solid #cbd5e1;
-    border-radius:10px;
-    resize:none;
-    box-sizing:border-box;
-}
-
-.decoradores{
-    margin-top:30px;
-}
-
-.checks{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-top:15px;
-}
-
-hr{
-    border:none;
-    border-top:1px solid #e2e8f0;
-    margin:20px 0;
-}
-
-@media print {
-
-    .acciones-timbrado,
-    .decoradores,
-    .btn {
-        display: none !important;
-    }
-}
-
-.no-pdf{
-    display:block;
-}
-
-@media print{
-    .no-pdf{
-        display:none !important;
-    }
-}
-
-.sat-badge{
-
-    background: #8B0000;
+    background-color: #7a1f2b;
     color: white;
-
-    padding: 12px;
-    border-radius: 10px;
-
-    text-align: center;
-
-    font-weight: bold;
-    letter-spacing: 1px;
-
-    margin-bottom: 25px;
-}
-
-.totales{
-
-    margin-top: 30px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-
-    gap: 8px;
-}
-
-.totales p{
-
-    font-size: 20px;
-}
-
-.totales h2{
-
-    color: #8B0000;
-    font-size: 42px;
-
-    margin-top: 10px;
-}
-
-.factura-banner{
-
+    font-size: 18px;
+    height:90px;
     display:flex;
-    justify-content:space-between;
     align-items:center;
-
-    margin-bottom:30px;
+    padding:0 40px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
 }
 
-.estado-badge{
+.actions{
 
-    background:#0f9d58;
-    color:white;
+margin-left:auto;
+}
+/*Boton historial*/
+ .ghost{
+     background-color: #7a1f2b;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+ }
 
-    padding:12px 25px;
-    border-radius:40px;
+ /*Boton de salir*/
+ .logout{
+    background-color: #7a1f2b;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+ }
+ .title{
 
-    font-weight:bold;
+margin-left:20px;
+}
+
+.title h1{
+
+font-size:34px;
+}
+
+.title p{
+
+color:#ffffff;
+}
+.factura-page{
+
+padding:40px;
+
+max-width:1400px;
+
+margin:auto;
+}
+
+.volver{
+    background-color: #7a1f2b;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+
+}
+
+.header{
+
+margin-bottom:40px;
+}
+
+.titulo{
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+margin-top:20px;
+}
+
+.icono{
+
+width:60px;
+
+height:60px;
+
+border-radius:14px;
+
+background:#2563eb;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+color:white;
+
+font-size:32px;
+}
+
+.layout{
+
+display:grid;
+
+grid-template-columns:
+2fr 1fr;
+
+gap:30px;
+}
+
+.panel{
+
+background:white;
+
+padding:40px;
+
+border-radius:20px;
+
+box-shadow:
+0 4px 20px rgba(0,0,0,.08);
+
+margin-bottom:30px;
+}
+
+.sub{
+
+color:#666;
+
+margin-bottom:30px;
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:20px;
+}
+
+.grid input{
+
+height:58px;
+
+border:none;
+
+background:#f6f7fb;
+
+padding:20px;
+
+border-radius:14px;
+}
+
+.sidebar{
+
+position:sticky;
+
+top:40px;
+
+height:max-content;
+}
+
+.resumen .fila{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:15px 0;
+}
+
+.resumen h2{
+
+font-size:44px;
+
+color:#2563eb;
+
+margin:30px 0;
+}
+
+.resumen button{
+
+width:100%;
+
+height:56px;
+
+border:none;
+
+margin-bottom:15px;
+
+border-radius:12px;
+
+cursor:pointer;
+}
+
+.verde{
+
+background:#08b444;
+
+color:white;
+}
+
+.cancelar{
+
+background:white;
+
+color:red;
+}
+
+/*Parte del timbrado estilo*/
+.timbrado{
+
+margin-top:30px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+}
+
+.timbrado input,
+.timbrado textarea{
+
+width:100%;
+
+padding:14px;
+
+background:#f6f7fb;
+
+border:none;
+
+border-radius:12px;
+
+font-size:14px;
+}
+
+.timbrado textarea{
+
+height:90px;
+
+resize:none;
+}
+
+/*Decoradores ocultos*/
+.decoradoresOcultos{
+
+display:none;
+}
+
+/*Botrones decoradores*/
+.decoradores{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:12px;
+}
+
+.decoradores button{
+
+height:65px;
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+border:none;
+
+background:white;
+
+cursor:pointer;
+
+padding:15px;
+
+border-radius:14px;
+
+box-shadow:
+0 3px 10px rgba(0,0,0,.08);
+}
+
+.decoradores button:hover{
+
+transform:translateY(-2px);
+}
+
+.btn-icon{
+
+width:28px;
+
+height:35px;
+
+object-fit:contain;
+}
+
+.state-buttons{
+
+display:flex;
+
+gap:15px;
+}
+
+.timbrar{
+
+background:#0cb74d;
+
+color:white;
+
+flex:1;
+}
+
+.cancelar{
+
+background:#e53935;
+
+color:white;
+
+flex:1;
+}
+
+.usuario{
+
+margin-bottom:25px;
+}
+
+.decoradoresOcultos{
+
+display:none;
 }

@@ -21,7 +21,8 @@ def home_view(request):
 def factura(request):
     return render(request, 'home/factura.html', {})
 
-
+def historial(request):
+    return render(request, 'home/historial.html', {})
 # =========================
 # LOGIN
 # =========================

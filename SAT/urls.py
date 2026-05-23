@@ -22,6 +22,7 @@ urlpatterns = [
     path('', views.index, name="index_view"),
     path('home/', views.home_view, name='home'),
     path('factura/', views.factura, name='factura'),
+    path('historial/', views.historial, name='historial'),
     path('guardar-factura/', views.guardar_factura),
     path('login/', views.login_view),
     path('obtener-datos-factura/',

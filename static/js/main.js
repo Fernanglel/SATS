@@ -75,6 +75,8 @@ window.login = async function () {
     // GUARDAR RFC
     localStorage.setItem("rfc", rfc);
 
+    localStorage.setItem( "nombre", data.nombre
+);
     // DETECTAR TIPO
     let tipoUsuario = "";
 
@@ -115,54 +117,130 @@ else{
 
 window.mostrarOpcionesFactura = function(){
 
-    const contenedor = document.getElementById("tiposFactura");
+const contenedor =
+document.getElementById(
+"tiposFactura"
+);
 
-    // Si no existe el contenedor, no hace nada
-    if(!contenedor) return;
+if(!contenedor) return;
 
-    // Limpiar contenido
-    contenedor.innerHTML = "<h3>Seleccione tipo de factura</h3>";
+contenedor.innerHTML="";
 
-    // Obtener opciones según tipo de usuario
-    const lista = obtenerOpcionesFactura();
+const tipos={
 
-    // Crear radios dinámicamente
-    lista.forEach((op, i)=>{
+Ingreso:{
+color:"SATcolor",
+icono:"/static/icons/Ingreso.png",
+desc: "Factura estándar para venta de productos o servicios"
+},
 
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'tipoFactura';
-        radio.value = op;
+Egreso:{
+color:"SATcolor",
+icono:"/static/icons/egreso.png",
+desc:"Para devoluciones"
+},
 
-        // Primera opción seleccionada por defecto
-        if(i === 0) radio.checked = true;
+Nomina:{
+color:"SATcolor",
+icono:"/static/icons/nomina.png",
+desc:"Para devoluciones"
+},
+Empresarial:{
+color:"SATcolor",
+icono:"/static/icons/traslado.png",
+desc:"Movimiento de mercancías"
+}
 
-        const label = document.createElement('label');
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(" " + op));
 
-        contenedor.appendChild(label);
-        contenedor.appendChild(document.createElement("br"));
-    });
 };
+
+
+const lista=
+obtenerOpcionesFactura();
+
+lista.forEach(op=>{
+
+const t=
+tipos[op]||
+
+{
+
+color:"azul",
+
+icono:"📄",
+
+desc:
+"Genera documentos fiscales"
+
+};
+
+contenedor.innerHTML += `
+<div class="card">
+
+<div class="card-cover ${t.color}">
+
+<img
+src="${t.icono}"
+class="tipo-icono">
+
+</div>
+
+<div class="card-body">
+
+<h3>${op}</h3>
+
+<p>${t.desc}</p>
+
+<button
+onclick="
+irFactura('${op}')
+">
+
+Generar Factura
+
+</button>
+
+</div>
+
+</div>
+`;
+});
+
+}
 
 
 // ==================== IR A FACTURA ====================
 
-window.irFactura = function(){
+window.irFactura = function(tipo = null){
 
-    // Obtener opción seleccionada
-    const seleccion = document.querySelector("input[name='tipoFactura']:checked")?.value;
+    if(tipo){
+
+        localStorage.setItem(
+            "tipoFactura",
+            tipo
+        );
+
+        window.location.href =
+            "/factura/";
+
+        return;
+    }
+
+    const seleccion =
+        document.querySelector(
+            "input[name='tipoFactura']:checked"
+        )?.value;
 
     if(!seleccion) return;
 
-    // Guardar en localStorage
-    localStorage.setItem("tipoFactura", seleccion);
+    localStorage.setItem(
+        "tipoFactura",
+        seleccion
+    );
 
-    // Redirigir
-        window.location.href = "/factura/";
-
-};
+    window.location.href =
+        "/factura/";
+}
 
 // ==================== TIMBRAR ====================
 
@@ -299,6 +377,65 @@ window.cargarFactura = async function(){
 
     const d = await generarFacturaAleatoria();
 
+    const rfc=
+
+localStorage.getItem(
+"rfc"
+);
+
+localStorage.setItem(
+"factura",
+
+JSON.stringify(
+d
+)
+);
+document
+.getElementById(
+"usuarioRFC"
+)
+.value=
+rfc;
+
+
+// si backend guarda nombre
+document
+.getElementById(
+"usuarioNombre"
+)
+.value=
+
+localStorage.getItem(
+"nombre"
+)
+||
+d.nombreEmisor;
+
+    //Nueva generar factura 
+    document.getElementById(
+"nombreReceptor"
+).value =
+d.nombreReceptor;
+
+document.getElementById(
+"rfcReceptor"
+).value =
+d.rfcReceptor;
+
+document.getElementById(
+"descripcion"
+).value =
+d.descripcion;
+
+document.getElementById(
+"cantidad"
+).value =
+d.cantidad;
+
+document.getElementById(
+"precio"
+).value =
+d.precio;
     console.log("DATOS:", d);
 
     const uuid = generarUUID();
@@ -405,8 +542,90 @@ window.cargarFactura = async function(){
 
 // ==================== DECORATORS ====================
 
-window.generarDecoradores = function(){
 
+window.generarDecoradores=function(){
+
+const d=
+
+JSON.parse(
+localStorage.getItem(
+"factura"
+));
+
+if(!d){
+
+alert(
+"No hay factura"
+);
+
+return;
+}
+
+let factura=
+new Factura(d);
+
+const checks=
+
+document.querySelectorAll(
+".decoradoresOcultos input:checked"
+);
+
+checks.forEach(c=>{
+
+switch(c.value){
+
+case "pdf":
+
+factura=
+new PDFDecorator(
+factura
+);
+
+break;
+
+case "xml":
+
+factura=
+new XMLDecorator(
+factura
+);
+
+break;
+
+case "json":
+
+factura=
+new JSONDecorator(
+factura
+);
+
+break;
+
+case "txt":
+
+factura=
+new TXTDecorator(
+factura
+);
+
+break;
+
+case "email":
+
+factura=
+new EmailDecorator(
+factura
+);
+
+break;
+
+}
+
+});
+
+factura.generar();
+
+}
     let d = JSON.parse(localStorage.getItem("factura"));
     let factura = new Factura(d);
 
