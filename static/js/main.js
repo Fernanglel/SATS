@@ -8,6 +8,7 @@ import { generarFacturaAleatoria } from '/static/js/services/facturaService.js';
 // Decorator base
 import { Factura } from '/static/js/decorators/Factura.js';
 
+
 // Decoradores
 import { PDFDecorator } from '/static/js/decorators/PDFDecorator.js';
 import { XMLDecorator } from '/static/js/decorators/XMLDecorator.js';
@@ -595,7 +596,138 @@ window.generarDecoradores = function () {
 
 };
 
+// ==================== ACTIVAR DECORADOR ====================
 
+function activarDecorador(tipo){
+
+    tipo = tipo.toLowerCase();
+
+    console.log("Decorador seleccionado:", tipo);
+
+    // limpiar todos
+    document
+        .querySelectorAll(
+            '.decoradoresOcultos input'
+        )
+        .forEach(c=>c.checked=false);
+
+    // buscar checkbox
+    const checkbox =
+        document.querySelector(
+            `input[value="${tipo}"]`
+        );
+
+    if(!checkbox){
+
+        console.error(
+            "No existe decorador:",
+            tipo
+        );
+
+        return;
+
+    }
+
+    checkbox.checked = true;
+
+    generarDecoradores();
+
+}
+
+
+//==========================
+// GENERADOR
+//==========================
+
+function generarDecoradores(){
+
+    console.log("Generando...");
+
+    let factura = new Factura();
+
+    if(
+        document.querySelector(
+            'input[value="pdf"]'
+        ).checked
+    ){
+
+        factura =
+            new PDFDecorator(
+                factura
+            );
+
+    }
+
+    if(
+        document.querySelector(
+            'input[value="xml"]'
+        ).checked
+    ){
+
+        factura =
+            new XMLDecorator(
+                factura
+            );
+
+    }
+
+    if(
+        document.querySelector(
+            'input[value="json"]'
+        ).checked
+    ){
+
+        factura =
+            new JSONDecorator(
+                factura
+            );
+
+    }
+
+    if(
+        document.querySelector(
+            'input[value="txt"]'
+        ).checked
+    ){
+
+        factura =
+            new TXTDecorator(
+                factura
+            );
+
+    }
+
+    if(
+        document.querySelector(
+            'input[value="email"]'
+        ).checked
+    ){
+
+        factura =
+            new EmailDecorator(
+                factura
+            );
+
+    }
+
+    // ESTE ES EL PASO CLAVE
+    factura.generar();
+
+}
+
+
+//==========================
+// EXPORTAR
+//==========================
+
+window.activarDecorador =
+activarDecorador;
+
+window.generarDecoradores =
+generarDecoradores;
+
+window.activarPDF =
+() => activarDecorador("pdf");
 // ==================== INIT ====================
 
 window.onload = () => {
@@ -627,3 +759,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+// ==================== Llamados al decorator ====================
+console.log("MAIN JS CARGADO");
+
+//========================
+// EXPORTAR A WINDOW
+//========================
+
+window.activarDecorador = activarDecorador;
+
+window.activarPDF = function(){
+
+    activarDecorador("pdf");
+    window.generarDecoradores = generarDecoradores;
+
+window.timbrarFactura = timbrarFactura;
+
+window.cancelarFactura = cancelarFactura;
+};
+

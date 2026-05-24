@@ -5,66 +5,73 @@
 
 <meta charset="UTF-8">
 
-<title>Factura</title>
+<title>Inicio</title>
 
 {% load static %}
 
 <link
 rel="stylesheet"
-href="{% static 'Styles/Home.css' %}">
+href="{% static 'styles/Home.css' %}">
 
 </head>
 
 <body>
 
-<div class="footer-decor">
-
-<header class="topbar">
+<!-- HEADER -->
 
 <div class="logo">
+<div class="sat">
 
 | SAT
 
 </div>
+<div class="brand">
+
 
 <div class="title">
 
 <h1>Sistema de Facturación</h1>
 
 <p>
-
-Gestion de documentos fiscales
-
+Gestión de documentos fiscales
 </p>
 
 </div>
 
-<div class="actions">
+</div>
 
-<a
-href="{% url 'historial' %}"
-class="logout">
+<div class="menu">
+
+<button class="menu-btn">
+
+☰
+
+</button>
+
+<div class="menu-content">
+
+<a href="{% url 'historial' %}"
+    class="logout">
 
 Historial
-
 </a>
 
-<a
-href="{% url 'index_view' %}"
-class="ghost">
-
+<a href="{% url 'index_view' %}">
 Salir
-
 </a>
+
+
 
 </div>
 
-</header>
+</div>
+</div>
 
+<!-- FIN LOGO -->
+
+<!-- CONTENIDO -->
 
 <main class="dashboard">
-
-
 
 <p class="sub">
 
@@ -72,7 +79,6 @@ Elige el tipo de documento que deseas generar
 
 </p>
 
-<!-- AQUÍ SE GENERAN -->
 <div
 id="tiposFactura"
 class="cards">
@@ -81,7 +87,6 @@ class="cards">
 
 </main>
 
-</div>
 
 <script
 type="module"

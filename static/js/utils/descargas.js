@@ -12,8 +12,14 @@ export function descargarArchivo(contenido,nombre,tipo){
 // ==================== XML ====================
 
 export function descargarXML(){
-    const d = JSON.parse(localStorage.getItem("factura"));
+    const factura = localStorage.getItem("factura");
 
+if(!factura){
+    alert("Primero genera una factura");
+    return;
+}
+
+const d = JSON.parse(factura);
     const xml = `<factura>
     <emisor>
         <nombre>${d.nombreEmisor}</nombre>
@@ -51,8 +57,14 @@ export function descargarJSON(){
 
 // ==================== TXT ====================
 export function descargarTXT(){
-    const d = JSON.parse(localStorage.getItem("factura"));
+    const factura = localStorage.getItem("factura");
 
+if(!factura){
+    alert("Primero genera una factura");
+    return;
+}
+
+const d = JSON.parse(factura);
     const txt = `
 FACTURA
 
@@ -84,7 +96,14 @@ TOTAL: $${d.total}
 // PDF
 // ==================== DESCARGAR PDF ====================
 export function descargarPDF(){
+    const factura = localStorage.getItem("factura");
 
+if(!factura){
+    alert("Primero genera una factura");
+    return;
+}
+
+const d = JSON.parse(factura);
     const elemento = document.getElementById("facturaPDF");
 
     const opciones = {
@@ -100,8 +119,14 @@ export function descargarPDF(){
 
 //QR
 export function generarYDescargarQR(){
-    const d = JSON.parse(localStorage.getItem("factura"));
+    const factura = localStorage.getItem("factura");
 
+if(!factura){
+    alert("Primero genera una factura");
+    return;
+}
+
+const d = JSON.parse(factura);
     const texto = `
 FACTURA
 
@@ -137,36 +162,51 @@ TOTAL: $${d.total}
 
 //Email
 export function enviarEmail(){
-    const d = JSON.parse(localStorage.getItem("factura"));
 
-    const asunto = `Factura SAT - ${d.folio}`;
+const factura =
+JSON.parse(
+localStorage.getItem("factura")
+);
 
-    const cuerpo = `
+if(!factura){
+
+alert("No hay factura");
+
+return;
+
+}
+
+const asunto =
+`Factura SAT - ${factura.folio}`;
+
+const cuerpo = `
+
 FACTURA
 
-Folio: ${d.folio}
-Clave: ${d.clave}
-Fecha: ${d.fecha}
+Folio: ${factura.folio}
+Clave: ${factura.clave}
 
 EMISOR:
-${d.nombreEmisor} (${d.rfcEmisor})
+${factura.nombreEmisor}
 
 RECEPTOR:
-${d.nombreReceptor} (${d.rfcReceptor})
+${factura.nombreReceptor}
 
-CONCEPTO:
-${d.descripcion}
-Cantidad: ${d.cantidad}
-Precio: $${d.precio}
-Importe: $${d.importe}
+TOTAL:
+$${factura.total}
 
-TOTALES:
-Subtotal: $${d.subtotal}
-IVA: $${d.iva}
-TOTAL: $${d.total}
 `;
 
-    window.open(
-        `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`
-    );
+const url =
+`https://mail.google.com/mail/?view=cm&fs=1`
++
+`&su=${encodeURIComponent(asunto)}`
++
+`&body=${encodeURIComponent(cuerpo)}`;
+
+window.open(
+url,
+"_blank"
+);
+
 }

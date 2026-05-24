@@ -9,10 +9,14 @@ body{
 
 background:#f5f6fa;
 }
-/*Barra SAT*/
+
+
+
+/* ===== ENCABEZADO ===== */
+
 .logo{
 
-    background-color: #7a1f2b;
+background-color: #7a1f2b;
     color: white;
     font-size: 18px;
     height:90px;
@@ -20,37 +24,150 @@ background:#f5f6fa;
     align-items:center;
     padding:0 40px;
     box-shadow: 0 2px 12px rgba(0,0,0,.08);
+
 }
 
-.actions{
+
+/* TITULO */
+
+.title{
+
+margin-left:25px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+}
+
+
+.title h1{
+
+margin:0;
+
+font-size:34px;
+
+color:white;
+
+}
+
+
+.title p{
+
+margin:0;
+
+color:white;
+
+}
+
+
+/* MENU */
+.menu{
 
 margin-left:auto;
-}
-/*Boton historial*/
- .ghost{
-     background-color: #7a1f2b;
-    color: white;
-    border: 2px solid white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
- }
 
- /*Boton de salir*/
- .logout{
-    background-color: #7a1f2b;
-    color: white;
-    border: 2px solid white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
- }
- .title{
+position:relative;
 
-margin-left:20px;
+display:flex;
+
+align-items:center;
+
 }
+
+
+/* BOTON */
+
+.menu-btn{
+
+width:55px;
+
+height:55px;
+
+border:none;
+
+background:transparent;
+
+color:white;
+
+font-size:34px;
+
+cursor:pointer;
+
+}
+
+
+/* MENU */
+
+.menu-content{
+
+opacity:0;
+
+visibility:hidden;
+
+position:absolute;
+
+top:70px;
+
+right:0;
+
+width:220px;
+
+background:white;
+
+border-radius:10px;
+
+overflow:hidden;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.2);
+
+transition:.2s;
+
+z-index:999;
+
+}
+
+
+/* MANTENER ABIERTO */
+
+.menu:hover .menu-content,
+
+.menu-content:hover{
+
+opacity:1;
+
+visibility:visible;
+
+}
+
+
+/* OPCIONES */
+
+.menu-content a{
+
+display:block;
+
+padding:18px;
+
+color:#81192b;
+
+text-decoration:none;
+
+font-weight:bold;
+
+}
+
+
+.menu-content a:hover{
+
+background:#f7eef0;
+
+}
+
+/**/
+
 
 .title h1{
 
@@ -63,11 +180,12 @@ color:#ffffff;
 }
 .factura-page{
 
-padding:40px;
+padding:50px 40px 40px;
 
 max-width:1400px;
 
 margin:auto;
+
 }
 
 .volver{
