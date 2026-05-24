@@ -84,15 +84,14 @@ Completa los datos para generar tu factura
 </div>
 
 
+<form id="formFactura">
 <div class="layout" id="facturaPDF">
-<!-- IZQUIERDA -->
+    <!-- IZQUIERDA -->
 <div class="main">
-
-<div class="panel">
 <div class="panel usuario">
 
 <h2>Usuario Actual</h2>
-
+<p class="sub"> Información del receptor </p>
 <div class="grid">
 
 <input
@@ -104,6 +103,8 @@ id="usuarioRFC"
 readonly>
 
 </div>
+
+<div class="panel">
 
 </div>
 
@@ -117,51 +118,178 @@ Información del receptor
 
 <input
 id="nombreReceptor"
-placeholder="Nombre / Razón Social">
+placeholder="Nombre / Razón Social"
+required>
 
 <input
 id="rfcReceptor"
-placeholder="RFC">
+placeholder="RFC"
+required>
 
 <input
 id="direccion"
-placeholder="Dirección Fiscal">
+placeholder="Dirección Fiscal"
+required>
 
 <input
+type="email"
 id="correo"
-placeholder="Correo">
+placeholder="Correo"
+required>
 
 </div>
 
 </div>
+<div class="panel">
 
+<h2>Datos Factura</h2>
+
+<div class="grid">
+
+<input id="folio" placeholder="Folio" required>
+
+<input id="csd" placeholder="CSD" required>
+
+<input
+id="codigoPostal"
+placeholder="Código Postal"
+required>
+
+<input
+type="date"
+id="fecha"
+required>
+
+<input
+type="time"
+id="hora"
+required>
+
+<select id="efectoComprobante" required>
+
+<option value="">
+Efecto comprobante
+</option>
+
+<option value="I">
+Ingreso
+</option>
+
+<option value="E">
+Egreso
+</option>
+
+<option value="T">
+Traslado
+</option>
+
+<option value="P">
+Pago
+</option>
+
+</select>
+
+<input
+id="regimenFiscal"
+placeholder="Régimen Fiscal"
+required>
+
+<input
+id="cfdi"
+placeholder="CFDI"
+required>
+
+<input
+id="moneda"
+value="MXN"
+required>
+
+<input
+id="formaPago"
+placeholder="Forma Pago"
+required>
+
+<select
+id="metodoPago"
+required>
+
+<option value="">
+Método Pago
+</option>
+
+<option value="PUE">
+PUE
+</option>
+
+<option value="PPD">
+PPD
+</option>
+
+</select>
+
+</div>
+
+</div>
 
 <div class="panel">
 
 <h2>Conceptos</h2>
 
-<p class="sub">
-Productos o servicios
-</p>
-
 <div class="grid">
 
 <input
+id="claveProducto"
+placeholder="Clave Producto"
+required>
+
+<input
+id="noIdentificacion"
+placeholder="No. Identificación"
+required>
+
+<input
 id="descripcion"
-placeholder="Descripción">
+placeholder="Descripción"
+required>
 
 <input
+type="number"
 id="cantidad"
-placeholder="Cantidad">
+placeholder="Cantidad"
+required>
 
 <input
+id="unidad"
+placeholder="Unidad"
+required>
+
+<input
+type="number"
+step="0.01"
 id="precio"
-placeholder="Precio">
+placeholder="Valor Unitario"
+required>
+
+<input
+type="number"
+step="0.01"
+id="importe"
+placeholder="Importe"
+required>
+
+<input
+id="pedimento"
+placeholder="No. Pedimento"
+required>
+
+<input
+id="predial"
+placeholder="No. Cuenta Predial"
+required>
 
 </div>
 
 </div>
-
 </div>
 
 
@@ -253,7 +381,7 @@ class="decoradoresOcultos">
 <input type="checkbox" value="email">
 
 </div>
-<!-- Panel viejo-->>
+<!-- Panel viejo-->
 
 <div class="panel resumen">
 <hr>
@@ -304,30 +432,10 @@ $0
 
 <h2 id="total"> $0 </h2>
 
-
+<!--Botn de timbrar factura -->
 <button class="verde" onclick="timbrarFactura()"> Timbrar Factura </button>
 
-
-<button onclick="activarPDF()"> Generar PDF </button>
-
-
-
-<button
-onclick="
-document
-.querySelector(
-'input[value=xml]'
-)
-.checked=true;
-
-generarDecoradores();
-">
-
-Generar XML
-
-</button>
-
-
+<!--Boton de cancelar factura -->
 <button
 class="cancelar"
 onclick="cancelarFactura()">
@@ -350,7 +458,68 @@ Cancelar
 
 <!-- MAIN -->
 <script type="module" src="{% static 'js/main.js' %}"></script>
+</div>
+</form>
+<!--Esto ayuda a que no se cre la factura si un campo esta vacio -->
+<script>
 
+function validarFormulario(){
+
+const form =
+document.getElementById(
+'formFactura'
+);
+
+if(!form.checkValidity()){
+
+form.reportValidity();
+
+return false;
+
+}
+
+return true;
+
+}
+
+const botones =
+document.querySelectorAll(
+'button'
+);
+
+botones.forEach(btn=>{
+
+const txt=
+btn.textContent
+.toLowerCase();
+
+if(
+txt.includes('generar')
+||
+txt.includes('timbrar')
+){
+
+btn.addEventListener(
+'click',
+function(e){
+
+if(
+!validarFormulario()
+){
+
+e.preventDefault();
+
+return;
+
+}
+
+});
+
+}
+
+});
+
+</script>
 </body>
 
 </html>

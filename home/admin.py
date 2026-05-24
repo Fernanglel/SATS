@@ -7,3 +7,4 @@ from .models import Factura, Cliente, Concepto
 admin.site.register(Factura)
 admin.site.register(Cliente)
 admin.site.register(Concepto)
+
