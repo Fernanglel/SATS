@@ -1,71 +1,242 @@
-// ==================== DESCARGA BASE ====================
+// ====================
+// NOMBRE PROFESIONAL
+// ====================
 
-export function descargarArchivo(contenido,nombre,tipo){
-    const blob=new Blob([contenido],{type:tipo});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download=nombre;
+function generarNombreArchivo(d){
+
+    const rfc = (
+        d.rfcEmisor || "XAXX010101000"
+    )
+    .replace(/\s+/g, "")
+    .toUpperCase();
+
+    const serie = d.serie || "A";
+
+    const folio = d.folio || "0001";
+
+    const fecha = (
+        d.fecha ||
+        new Date()
+        .toISOString()
+        .slice(0,10)
+        .replace(/-/g,"")
+    );
+
+    return `${rfc}_${serie}${folio}_${fecha}`;
+}
+
+
+// ====================
+// DESCARGA BASE
+// ====================
+
+export function descargarArchivo(
+    contenido,
+    nombre,
+    tipo
+){
+
+    const blob = new Blob(
+        [contenido],
+        { type: tipo }
+    );
+
+    const a =
+    document.createElement("a");
+
+    a.href =
+    URL.createObjectURL(blob);
+
+    a.download = nombre;
+
     a.click();
 }
 
-// ==================== FORMATOS ====================
-// ==================== XML ====================
+
+// ====================
+// XML
+// ====================
 
 export function descargarXML(){
-    const factura = localStorage.getItem("factura");
 
-if(!factura){
-    alert("Primero genera una factura");
-    return;
-}
+    const factura =
+    localStorage.getItem("factura");
 
-const d = JSON.parse(factura);
-    const xml = `<factura>
+    if(!factura){
+
+        alert(
+            "Primero genera una factura"
+        );
+
+        return;
+
+    }
+
+    const d = JSON.parse(factura);
+
+    const nombre =
+    generarNombreArchivo(d);
+
+    const xml = `
+
+<factura>
+
     <emisor>
-        <nombre>${d.nombreEmisor}</nombre>
-        <rfc>${d.rfcEmisor}</rfc>
+
+        <nombre>
+            ${d.nombreEmisor}
+        </nombre>
+
+        <rfc>
+            ${d.rfcEmisor}
+        </rfc>
+
     </emisor>
+
     <receptor>
-        <nombre>${d.nombreReceptor}</nombre>
-        <rfc>${d.rfcReceptor}</rfc>
+
+        <nombre>
+            ${d.nombreReceptor}
+        </nombre>
+
+        <rfc>
+            ${d.rfcReceptor}
+        </rfc>
+
     </receptor>
+
     <datos>
-        <folio>${d.folio}</folio>
-        <clave>${d.clave}</clave>
-        <fecha>${d.fecha}</fecha>
-        <descripcion>${d.descripcion}</descripcion>
+
+        <folio>
+            ${d.folio}
+        </folio>
+
+        <clave>
+            ${d.clave}
+        </clave>
+
+        <fecha>
+            ${d.fecha}
+        </fecha>
+
+        <descripcion>
+            ${d.descripcion}
+        </descripcion>
+
     </datos>
+
     <concepto>
-        <cantidad>${d.cantidad}</cantidad>
-        <precio>${d.precio}</precio>
-        <importe>${d.importe}</importe>
+
+        <cantidad>
+            ${d.cantidad}
+        </cantidad>
+
+        <precio>
+            ${d.precio}
+        </precio>
+
+        <importe>
+            ${d.importe}
+        </importe>
+
     </concepto>
+
     <totales>
-        <subtotal>${d.subtotal}</subtotal>
-        <iva>${d.iva}</iva>
-        <total>${d.total}</total>
+
+        <subtotal>
+            ${d.subtotal}
+        </subtotal>
+
+        <iva>
+            ${d.iva}
+        </iva>
+
+        <total>
+            ${d.total}
+        </total>
+
     </totales>
-</factura>`;
 
-    descargarArchivo(xml,"factura.xml","text/xml");
+</factura>
+
+`;
+
+    descargarArchivo(
+
+        xml,
+
+        `${nombre}.xml`,
+
+        "text/xml"
+
+    );
+
 }
 
-//JSON
+
+// ====================
+// JSON
+// ====================
+
 export function descargarJSON(){
-    descargarArchivo(localStorage.getItem("factura"),"factura.json","application/json");
+
+    const factura =
+    localStorage.getItem("factura");
+
+    if(!factura){
+
+        alert(
+            "Primero genera una factura"
+        );
+
+        return;
+
+    }
+
+    const d = JSON.parse(factura);
+
+    const nombre =
+    generarNombreArchivo(d);
+
+    descargarArchivo(
+
+        factura,
+
+        `${nombre}.json`,
+
+        "application/json"
+
+    );
+
 }
 
-// ==================== TXT ====================
+
+// ====================
+// TXT
+// ====================
+
 export function descargarTXT(){
-    const factura = localStorage.getItem("factura");
 
-if(!factura){
-    alert("Primero genera una factura");
-    return;
-}
+    const factura =
+    localStorage.getItem("factura");
 
-const d = JSON.parse(factura);
+    if(!factura){
+
+        alert(
+            "Primero genera una factura"
+        );
+
+        return;
+
+    }
+
+    const d = JSON.parse(factura);
+
+    const nombre =
+    generarNombreArchivo(d);
+
     const txt = `
+
 FACTURA
 
 Folio: ${d.folio}
@@ -73,140 +244,295 @@ Clave: ${d.clave}
 Fecha: ${d.fecha}
 
 EMISOR:
-${d.nombreEmisor} (${d.rfcEmisor})
+${d.nombreEmisor}
+(${d.rfcEmisor})
 
 RECEPTOR:
-${d.nombreReceptor} (${d.rfcReceptor})
+${d.nombreReceptor}
+(${d.rfcReceptor})
 
 CONCEPTO:
 ${d.descripcion}
-Cantidad: ${d.cantidad}
-Precio: $${d.precio}
-Importe: $${d.importe}
+
+Cantidad:
+${d.cantidad}
+
+Precio:
+$${d.precio}
+
+Importe:
+$${d.importe}
 
 TOTALES:
-Subtotal: $${d.subtotal}
-IVA: $${d.iva}
-TOTAL: $${d.total}
+
+Subtotal:
+$${d.subtotal}
+
+IVA:
+$${d.iva}
+
+TOTAL:
+$${d.total}
+
 `;
 
-    descargarArchivo(txt,"factura.txt","text/plain");
+    descargarArchivo(
+
+        txt,
+
+        `${nombre}.txt`,
+
+        "text/plain"
+
+    );
+
 }
 
+
+// ====================
 // PDF
-// ==================== DESCARGAR PDF ====================
+// ====================
+
 export function descargarPDF(){
-    const factura = localStorage.getItem("factura");
 
-if(!factura){
-    alert("Primero genera una factura");
-    return;
-}
+    const factura =
+    localStorage.getItem("factura");
 
-const d = JSON.parse(factura);
-    const elemento = document.getElementById("facturaPDF");
+    if(!factura){
+
+        alert(
+            "Primero genera una factura"
+        );
+
+        return;
+
+    }
+
+    const d = JSON.parse(factura);
+
+    const nombre =
+    generarNombreArchivo(d);
+
+    const elemento =
+    document.getElementById(
+        "facturaPDF"
+    );
 
     const opciones = {
+
         margin: 5,
-        filename: 'Factura_SAT.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2 }, // 
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+
+        filename:
+        `${nombre}.pdf`,
+
+        image: {
+
+            type: "jpeg",
+
+            quality: 1
+
+        },
+
+        html2canvas: {
+
+            scale: 2
+
+        },
+
+        jsPDF: {
+
+            unit: "mm",
+
+            format: "a4",
+
+            orientation: "portrait"
+
+        }
+
     };
 
-    html2pdf().set(opciones).from(elemento).save();
+    html2pdf()
+
+        .set(opciones)
+
+        .from(elemento)
+
+        .save();
+
 }
 
-//QR
+
+// ====================
+// QR
+// ====================
+
 export function generarYDescargarQR(){
-    const factura = localStorage.getItem("factura");
 
-if(!factura){
-    alert("Primero genera una factura");
-    return;
-}
+    const factura =
+    localStorage.getItem("factura");
 
-const d = JSON.parse(factura);
+    if(!factura){
+
+        alert(
+            "Primero genera una factura"
+        );
+
+        return;
+
+    }
+
+    const d = JSON.parse(factura);
+
+    const nombre =
+    generarNombreArchivo(d);
+
     const texto = `
+
 FACTURA
 
 Folio: ${d.folio}
+
 Clave: ${d.clave}
+
 Fecha: ${d.fecha}
 
 EMISOR:
-${d.nombreEmisor} (${d.rfcEmisor})
+${d.nombreEmisor}
+(${d.rfcEmisor})
 
 RECEPTOR:
-${d.nombreReceptor} (${d.rfcReceptor})
+${d.nombreReceptor}
+(${d.rfcReceptor})
 
-CONCEPTO:
-${d.descripcion}
-Cantidad: ${d.cantidad}
-Precio: $${d.precio}
-Importe: $${d.importe}
+TOTAL:
+$${d.total}
 
-TOTALES:
-Subtotal: $${d.subtotal}
-IVA: $${d.iva}
-TOTAL: $${d.total}
 `;
 
-    
-    const url=`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(texto)}`; 
-    const a=document.createElement("a"); 
-    a.href=url; 
-    a.download="qr_factura.png"; 
-    a.click(); 
+    const url =
+
+    `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(texto)}`;
+
+    const a =
+    document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+    `QR_${nombre}.png`;
+
+    a.click();
+
 }
 
-//Email
+
 export function enviarEmail(){
 
-const factura =
-JSON.parse(
-localStorage.getItem("factura")
-);
+    const facturaGuardada =
+    localStorage.getItem("factura");
 
-if(!factura){
+    if(!facturaGuardada){
 
-alert("No hay factura");
+        alert("No hay factura");
 
-return;
+        return;
 
-}
+    }
 
-const asunto =
-`Factura SAT - ${factura.folio}`;
+    const factura =
+    JSON.parse(facturaGuardada);
 
-const cuerpo = `
+    // ====================
+    // ASUNTO
+    // ====================
 
-FACTURA
+    const asunto =
 
-Folio: ${factura.folio}
-Clave: ${factura.clave}
+    `Factura SAT ${factura.serie || "A"}${factura.folio} - ${factura.nombreReceptor}`;
+
+    // ====================
+    // CUERPO
+    // ====================
+
+    const cuerpo = `
+
+FACTURA CFDI
+
+Folio:
+${factura.folio}
+
+Clave:
+${factura.clave}
+
+Fecha:
+${factura.fecha}
+
+====================
 
 EMISOR:
 ${factura.nombreEmisor}
 
+RFC:
+${factura.rfcEmisor}
+
+====================
+
 RECEPTOR:
 ${factura.nombreReceptor}
+
+RFC:
+${factura.rfcReceptor}
+
+====================
+
+CONCEPTO:
+${factura.descripcion}
+
+Cantidad:
+${factura.cantidad}
+
+Precio:
+$${factura.precio}
+
+Importe:
+$${factura.importe}
+
+====================
+
+Subtotal:
+$${factura.subtotal}
+
+IVA:
+$${factura.iva}
 
 TOTAL:
 $${factura.total}
 
 `;
 
-const url =
-`https://mail.google.com/mail/?view=cm&fs=1`
-+
-`&su=${encodeURIComponent(asunto)}`
-+
-`&body=${encodeURIComponent(cuerpo)}`;
+    // ====================
+    // URL GMAIL
+    // ====================
 
-window.open(
-url,
-"_blank"
-);
+    const url =
+
+    `https://mail.google.com/mail/?view=cm&fs=1`
+
+    +
+
+    `&su=${encodeURIComponent(asunto)}`
+
+    +
+
+    `&body=${encodeURIComponent(cuerpo)}`;
+
+    // ====================
+    // ABRIR GMAIL
+    // ====================
+
+    window.open(
+        url,
+        "_blank"
+    );
 
 }

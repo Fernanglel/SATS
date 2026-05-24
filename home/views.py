@@ -1,9 +1,33 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+
 from .models import Cliente
 from .bridge import FacturaDB
+
 import json
+import uuid
+import random
+
+from datetime import datetime
+
+
+# =========================
+# GENERAR NOMBRE FACTURA
+# =========================
+
+def generar_nombre_factura(rfc, serie, folio):
+
+    fecha = datetime.now().strftime("%Y%m%d")
+
+    uuid_corto = str(uuid.uuid4())[:6]
+
+    return (
+        f"{rfc}_"
+        f"{serie}{folio}_"
+        f"{fecha}_"
+        f"{uuid_corto}.pdf"
+    )
 
 
 # =========================
@@ -11,18 +35,41 @@ import json
 # =========================
 
 def index(request):
-    return render(request, "home/index.html", {})
+
+    return render(
+        request,
+        "home/index.html",
+        {}
+    )
 
 
 def home_view(request):
-    return render(request, 'home/home.html', {})
+
+    return render(
+        request,
+        "home/home.html",
+        {}
+    )
 
 
 def factura(request):
-    return render(request, 'home/factura.html', {})
+
+    return render(
+        request,
+        "home/factura.html",
+        {}
+    )
+
 
 def historial(request):
-    return render(request, 'home/historial.html', {})
+
+    return render(
+        request,
+        "home/historial.html",
+        {}
+    )
+
+
 # =========================
 # LOGIN
 # =========================
@@ -33,14 +80,18 @@ def login_view(request):
     if request.method == "POST":
 
         rfc = request.POST.get("rfc")
+
         password = request.POST.get("password")
 
         print("RFC:", rfc)
+
         print("PASSWORD:", password)
 
         try:
 
-            user = Cliente.objects.get(rfc__iexact=rfc)
+            user = Cliente.objects.get(
+                rfc__iexact=rfc
+            )
 
             if user.password == password:
 
@@ -78,92 +129,196 @@ def guardar_factura(request):
 
         try:
 
+            # =========================
+            # JSON
+            # =========================
+
             data = json.loads(request.body)
 
             print("DATOS RECIBIDOS:", data)
 
+            # =========================
+            # DATOS DINAMICOS
+            # =========================
+
+            rfc = (
+                data.get(
+                    "rfcEmisor",
+                    "XAXX010101000"
+                )
+                .replace(" ", "")
+                .upper()
+            )
+
+            serie = data.get(
+                "serie",
+                "A"
+            )
+
+            folio = str(
+                data.get(
+                    "folio",
+                    "0001"
+                )
+            )
+
+            # =========================
+            # NOMBRE ARCHIVO
+            # =========================
+
+            nombre_archivo = generar_nombre_factura(
+
+                rfc,
+                serie,
+                folio
+
+            )
+
+            print(
+                "ARCHIVO:",
+                nombre_archivo
+            )
+
+            # =========================
+            # BASE DATOS
+            # =========================
+
             db = FacturaDB()
 
             # =========================
-            # FORMATO DESDE main.js
+            # FORMATO main.js
             # =========================
 
             if "rfcEmisor" in data:
 
                 nueva_factura = db.guardar({
 
-                    "rfcEmisor": data.get("rfcEmisor"),
-                    "nombreEmisor": data.get("nombreEmisor"),
+                    "rfcEmisor":
+                    data.get("rfcEmisor"),
 
-                    "rfcReceptor": data.get("rfcReceptor"),
-                    "nombreReceptor": data.get("nombreReceptor"),
+                    "nombreEmisor":
+                    data.get("nombreEmisor"),
 
-                    "folio": data.get("folio"),
+                    "rfcReceptor":
+                    data.get("rfcReceptor"),
 
-                    "clave": data.get("clave"),
+                    "nombreReceptor":
+                    data.get("nombreReceptor"),
 
-                    "subtotal": data.get("subtotal"),
+                    "folio":
+                    data.get("folio"),
 
-                    "iva": data.get("iva"),
+                    "clave":
+                    data.get("clave"),
 
-                    "total": data.get("total"),
+                    "subtotal":
+                    data.get("subtotal"),
 
-                    "claveConcepto": data.get("claveConcepto"),
+                    "iva":
+                    data.get("iva"),
 
-                    "descripcion": data.get("descripcion"),
+                    "total":
+                    data.get("total"),
 
-                    "cantidad": data.get("cantidad"),
+                    "claveConcepto":
+                    data.get("claveConcepto"),
 
-                    "precio": data.get("precio"),
+                    "descripcion":
+                    data.get("descripcion"),
 
-                    "importe": data.get("importe")
-                })
+                    "cantidad":
+                    data.get("cantidad"),
 
-                return JsonResponse({
-                    "ok": True,
-                    "id": nueva_factura.id
+                    "precio":
+                    data.get("precio"),
+
+                    "importe":
+                    data.get("importe")
+
                 })
 
             # =========================
-            # FORMATO DESDE Factura.js
+            # FORMATO Factura.js
             # =========================
 
-            cliente = data.get("cliente")
-            factura = data.get("factura")
-            conceptos = data.get("conceptos")
+            else:
 
-            nueva_factura = db.guardar({
+                cliente = data.get("cliente")
 
-                "rfcEmisor": cliente.get("rfc"),
-                "nombreEmisor": cliente.get("nombre"),
+                factura = data.get("factura")
 
-                "rfcReceptor": cliente.get("rfc"),
-                "nombreReceptor": cliente.get("nombre"),
+                conceptos = data.get("conceptos")
 
-                "folio": factura.get("folio"),
+                nueva_factura = db.guardar({
 
-                "clave": "AUTO-" + str(factura.get("folio")),
+                    "rfcEmisor":
+                    cliente.get("rfc"),
 
-                "subtotal": factura.get("total"),
+                    "nombreEmisor":
+                    cliente.get("nombre"),
 
-                "iva": factura.get("total") * 0.16,
+                    "rfcReceptor":
+                    cliente.get("rfc"),
 
-                "total": factura.get("total"),
+                    "nombreReceptor":
+                    cliente.get("nombre"),
 
-                "claveConcepto": "001",
+                    "folio":
+                    factura.get("folio"),
 
-                "descripcion": conceptos[0].get("descripcion"),
+                    "clave":
+                    "AUTO-" + str(
+                        factura.get("folio")
+                    ),
 
-                "cantidad": conceptos[0].get("cantidad"),
+                    "subtotal":
+                    factura.get("total"),
 
-                "precio": conceptos[0].get("precio"),
+                    "iva":
+                    factura.get("total") * 0.16,
 
-                "importe": conceptos[0].get("importe")
-            })
+                    "total":
+                    factura.get("total"),
+
+                    "claveConcepto":
+                    "001",
+
+                    "descripcion":
+                    conceptos[0].get(
+                        "descripcion"
+                    ),
+
+                    "cantidad":
+                    conceptos[0].get(
+                        "cantidad"
+                    ),
+
+                    "precio":
+                    conceptos[0].get(
+                        "precio"
+                    ),
+
+                    "importe":
+                    conceptos[0].get(
+                        "importe"
+                    )
+
+                })
+
+            # =========================
+            # RESPUESTA
+            # =========================
 
             return JsonResponse({
+
                 "ok": True,
-                "id": nueva_factura.id
+
+                "id":
+                nueva_factura.id,
+
+                "archivo":
+                nombre_archivo
+
             })
 
         except Exception as e:
@@ -171,16 +326,22 @@ def guardar_factura(request):
             print("ERROR:", e)
 
             return JsonResponse({
+
                 "ok": False,
-                "error": str(e)
+
+                "error":
+                str(e)
+
             })
 
     return JsonResponse({
         "ok": False
     })
-#Datos
-import random
-from django.forms.models import model_to_dict
+
+
+# =========================
+# DATOS FACTURA
+# =========================
 
 @csrf_exempt
 def obtener_datos_factura(request):
@@ -189,26 +350,44 @@ def obtener_datos_factura(request):
 
     try:
 
-        cliente = Cliente.objects.get(rfc__iexact=rfc)
-
-        # CLIENTES ALEATORIOS
-        receptores = list(
-            Cliente.objects.exclude(rfc=cliente.rfc)
+        cliente = Cliente.objects.get(
+            rfc__iexact=rfc
         )
 
-        receptor = random.choice(receptores)
+        receptores = list(
+
+            Cliente.objects.exclude(
+                rfc=cliente.rfc
+            )
+
+        )
+
+        receptor = random.choice(
+            receptores
+        )
 
         datos = {
 
             "emisor": {
-                "rfc": cliente.rfc,
-                "nombre": cliente.nombre
+
+                "rfc":
+                cliente.rfc,
+
+                "nombre":
+                cliente.nombre
+
             },
 
             "receptor": {
-                "rfc": receptor.rfc,
-                "nombre": receptor.nombre
+
+                "rfc":
+                receptor.rfc,
+
+                "nombre":
+                receptor.nombre
+
             }
+
         }
 
         return JsonResponse(datos)
@@ -216,5 +395,8 @@ def obtener_datos_factura(request):
     except Cliente.DoesNotExist:
 
         return JsonResponse({
-            "error": "Cliente no encontrado"
+
+            "error":
+            "Cliente no encontrado"
+
         })
