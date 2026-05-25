@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+</thead>
+
+<tbody>
+{% for item in factura.conceptos %}
+<tr>
+    <td>{{ item.clave }}</td>
+    <td>{{ item.descripcion }}</td>
+    <td>{{ item.cantidad }}</td>
+    <td>{{ item.unidad }}</td>
+    <td>${{ item.valor_unitario }}</td>
+    <td>${{ item.importe }}</td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+<div class="total-box">
+
+    <div class="total-row">
+        <span>Subtotal</span>
+        <span>${{ factura.subtotal }}</span>
+    </div>
+
+    <div class="total-row">
+        <span>IVA</span>
+        <span>${{ factura.iva }}</span>
+    </div>
+
+    <div class="total-row total-final">
+        <span>Total</span>
+        <span>${{ factura.total }}</span>
+    </div>
+
+</div>
+
+<div class="footer">
+
+<div class="row">
+
+    <div style="width:140px;">
+        <img src="{{ qr_base64 }}" class="qr">
+    </div>
+
+    <div style="flex:1; margin-left:15px;">
+
+        <div class="label">Sello digital del CFDI</div>
+        <div class="sello">{{ factura.sello_cfdi }}</div>
+
+        <br>
+
+        <div class="label">Cadena original del complemento</div>
+        <div class="sello">{{ factura.cadena_original }}</div>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="small" style="text-align:center;">
+Este documento es una representación impresa de un CFDI
+</div>
+
+</div>
+
+</body>
+</html>

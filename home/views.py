@@ -400,3 +400,89 @@ def obtener_datos_factura(request):
             "Cliente no encontrado"
 
         })
+        
+# =========================
+# PDF FACTURA   
+# =========================
+from django.http import HttpResponse
+
+def generar_qr_base64(texto):
+
+    qr = qrcode.make(texto)
+
+    buffer = BytesIO()
+
+    qr.save(buffer, format="PNG")
+
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+
+    return f"data:image/png;base64,{img_str}"
+
+
+
+def generar_pdf_sat(request):
+
+    factura = {
+
+        "rfc_emisor": "AAA010101AAA",
+        "nombre_emisor": "EMPRESA DEMO SA DE CV",
+        "regimen": "601 General de Ley",
+
+        "uuid": "7A2D-44FF-9911",
+        "serie": "A",
+        "folio": "1001",
+        "fecha": "2026-05-25 18:00",
+
+        "rfc_receptor": "XAXX010101000",
+        "nombre_receptor": "PUBLICO GENERAL",
+
+        "uso_cfdi": "G03",
+        "metodo_pago": "PUE",
+
+        "subtotal": "10,000.00",
+        "iva": "1,600.00",
+        "total": "11,600.00",
+
+        "sello_cfdi": "ASDASDASDASDASDASDASDASDASDASDASDASD",
+
+        "cadena_original": "||1.1|AABBCCDD|SAT||",
+
+        "conceptos": [
+            {
+                "clave": "81112100",
+                "descripcion": "Servicio profesional",
+                "cantidad": 1,
+                "unidad": "E48",
+                "valor_unitario": "10,000.00",
+                "importe": "10,000.00"
+            }
+        ]
+    }
+
+    qr_base64 = generar_qr_base64(
+        factura["uuid"]
+    )
+
+    html_string = render_to_string(
+        "pdf/factura_sat.html",
+        {
+            "factura": factura,
+            "qr_base64": qr_base64
+        }
+    )
+
+    pdf = HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri()
+    ).write_pdf()
+
+    response = HttpResponse(
+        pdf,
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = (
+        'inline; filename="factura_sat.pdf"'
+    )
+
+    return response

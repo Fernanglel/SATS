@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from home.views import generar_pdf_sat
 from django.contrib import admin
 from django.urls import path
 from home import views
@@ -23,6 +25,7 @@ urlpatterns = [
     path('home/', views.home_view, name='home'),
     path('factura/', views.factura, name='factura'),
     path('historial/', views.historial, name='historial'),
+    path('pdf-sat/<str:uuid>/', generar_pdf_sat, name='pdf_sat'),
     path('guardar-factura/', views.guardar_factura),
     path('login/', views.login_view),
     path('obtener-datos-factura/',
