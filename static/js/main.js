@@ -759,9 +759,17 @@ function generarDecoradores(){
 console.log(
 "Generando..."
 );
+const datos =
+JSON.parse(
+localStorage.getItem(
+"factura"
+)
+);
 
 let factura =
-new Factura();
+new Factura(
+datos
+);
 
 if(
 document.querySelector(

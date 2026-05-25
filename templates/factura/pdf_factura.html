@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<style>
+
+body{
+font-family:Arial;
+padding:30px;
+font-size:13px;
+}
+
+.header{
+
+border-bottom:3px solid #7a1f2b;
+
+padding-bottom:15px;
+
+margin-bottom:20px;
+
+}
+
+.sat{
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#7a1f2b;
+
+}
+
+.box{
+
+border:1px solid #ddd;
+
+padding:15px;
+
+margin-top:15px;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+th,
+td{
+
+border:1px solid #ccc;
+
+padding:8px;
+
+}
+
+.total{
+
+text-align:right;
+
+font-size:24px;
+
+font-weight:bold;
+
+margin-top:20px;
+
+}
+
+.footer{
+
+margin-top:30px;
+
+font-size:11px;
+
+word-break:break-all;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="sat">
+SAT
+</div>
+
+<h2>Comprobante Fiscal Digital</h2>
+
+</div>
+
+<div class="box">
+
+<strong>Emisor</strong><br>
+
+{{ factura.nombre_emisor }}<br>
+
+{{ factura.rfc_emisor }}
+
+</div>
+
+<div class="box">
+
+<strong>Receptor</strong><br>
+
+{{ factura.nombre_receptor }}<br>
+
+{{ factura.rfc_receptor }}
+
+</div>
+
+<div class="box">
+
+Folio:
+{{ factura.folio }}
+
+<br>
+
+UUID:
+{{ factura.uuid }}
+
+</div>
+
+<table>
+
+<tr>
+
+<th>Descripción</th>
+
+<th>Cantidad</th>
+
+<th>Precio</th>
+
+<th>Importe</th>
+
+</tr>
+
+<tr>
+
+<td>
+{{ factura.descripcion }}
+</td>
+
+<td>
+{{ factura.cantidad }}
+</td>
+
+<td>
+${{ factura.precio }}
+</td>
+
+<td>
+${{ factura.importe }}
+</td>
+
+</tr>
+
+</table>
+
+<div class="total">
+
+TOTAL:
+${{ factura.total }}
+
+</div>
+
+<div class="footer">
+
+Cadena Original:<br>
+
+{{ factura.cadena }}
+
+<br><br>
+
+Sello Digital:<br>
+
+{{ factura.sello }}
+
+</div>
+
+</body>
+</html>

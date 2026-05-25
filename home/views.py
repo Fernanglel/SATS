@@ -11,7 +11,108 @@ import random
 
 from datetime import datetime
 
+#Generar pdf
+from django.template.loader import render_to_string
 
+from django.core.files.base import ContentFile
+
+from xhtml2pdf import pisa
+
+from io import BytesIO
+
+import os
+#PDF diseno
+def generar_pdf(factura):
+
+    try:
+
+        html = render_to_string(
+            "factura/pdf_factura.html",
+            {
+                "factura": {
+
+                    "folio": factura.folio,
+
+                    "uuid": factura.uuid,
+
+                    "nombre_emisor":
+                    factura.nombreEmisor,
+
+                    "rfc_emisor":
+                    factura.rfcEmisor,
+
+                    "nombre_receptor":
+                    factura.nombreReceptor,
+
+                    "rfc_receptor":
+                    factura.rfcReceptor,
+
+                    "descripcion":
+                    factura.descripcion,
+
+                    "cantidad":
+                    factura.cantidad,
+
+                    "precio":
+                    factura.precio,
+
+                    "importe":
+                    factura.importe,
+
+                    "total":
+                    factura.total,
+
+                    "cadena":
+                    getattr(
+                        factura,
+                        "cadenaOriginal",
+                        ""
+                    ),
+
+                    "sello":
+                    getattr(
+                        factura,
+                        "selloDigital",
+                        ""
+                    )
+
+                }
+            }
+        )
+
+        pdf = BytesIO()
+
+        pisa.CreatePDF(
+            html,
+            dest=pdf
+        )
+
+        nombre = (
+            f"factura_"
+            f"{factura.folio}.pdf"
+        )
+
+        factura.archivo_pdf.save(
+
+            nombre,
+
+            ContentFile(
+                pdf.getvalue()
+            ),
+
+            save=True
+        )
+
+        return True
+
+    except Exception as e:
+
+        print(
+            "ERROR PDF:",
+            e
+        )
+
+        return False
 # =========================
 # GENERAR NOMBRE FACTURA
 # =========================
@@ -305,6 +406,23 @@ def guardar_factura(request):
 
                 })
 
+     
+# =========================
+# RESPUESTA
+# =========================
+            # =========================
+            # GENERAR PDF
+            # =========================
+
+            pdf_ok = generar_pdf(
+                nueva_factura
+            )
+
+            print(
+                "PDF GENERADO:",
+                pdf_ok
+            )
+
             # =========================
             # RESPUESTA
             # =========================
@@ -317,10 +435,18 @@ def guardar_factura(request):
                 nueva_factura.id,
 
                 "archivo":
-                nombre_archivo
+                nombre_archivo,
+
+                "pdf":
+                (
+                    nueva_factura.archivo_pdf.url
+                    if nueva_factura.archivo_pdf
+                    else None
+                )
 
             })
 
+           
         except Exception as e:
 
             print("ERROR:", e)

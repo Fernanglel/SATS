@@ -17,7 +17,11 @@ class Cliente(models.Model):
 # FACTURAS
 # ==========================
 class Factura(models.Model):
-
+    archivo_pdf = models.FileField(
+    upload_to="facturas/",
+    null=True,
+    blank=True
+)
     folio = models.CharField(max_length=20, unique=True)
 
     csd = models.CharField(

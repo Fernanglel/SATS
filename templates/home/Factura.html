@@ -542,19 +542,11 @@ return true;
 function activarDecorador(tipo){
 
 if(!tipo){
-
-console.error(
-"Tipo vacío"
-);
-
 return;
-
 }
 
 tipo =
-String(
-tipo
-)
+String(tipo)
 .toLowerCase();
 
 console.log(
@@ -562,7 +554,7 @@ console.log(
 tipo
 );
 
-// limpiar checks
+// limpiar
 document
 .querySelectorAll(
 ".decoradoresOcultos input"
@@ -571,7 +563,7 @@ document
 c=>c.checked=false
 );
 
-// buscar
+// marcar
 const checkbox =
 document.querySelector(
 `input[value="${tipo}"]`
@@ -588,11 +580,10 @@ return;
 
 }
 
-checkbox.checked =
-true;
+checkbox.checked = true;
 
-// generar
-generarDecoradores();
+// ← AQUÍ ESTÁ EL FIX
+window.generarDecoradores();
 
 }
 
