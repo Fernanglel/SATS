@@ -295,96 +295,9 @@ required>
 
 <!-- DERECHA -->
 <div class="sidebar">
-<!-- Panel nuevo-->
-<div class="panel acciones">
-
-<h2>Exportar</h2>
-
-<div class="decoradores">
-<!--Botones de decoradores -->
-<!--Cada botón activa un decorador específico-->
-<!--PDF-->
-<button onclick="activarDecorador('pdf')">
-<img src="/static/icons/pdf.png" class="btn-icon">
-PDF
-</button>
-
-
-<!--XML-->
-<button onclick="activarDecorador('xml')">
-<img src="/static/icons/xml.png" class="btn-icon">
-XML
-</button>
-
-<!--JSON  -->
-<button onclick="activarDecorador('json')">
-<img src="/static/icons/json.png" class="btn-icon">
-JSON
-</button>
-
-<!--TXT  -->
-<button onclick="activarDecorador('txt')">
-<img src="/static/icons/txt.png" class="btn-icon">
-TXT
-</button>
-
-<!--EMAIL  -->
-<button onclick="activarDecorador('email')">
-<img src="/static/icons/email.png" class="btn-icon">
-Email
-</button>
-
-</div>
-
-</div>
-
-
-<div class="panel">
-
-<h2>Estado Factura</h2>
-
-<div class="state-buttons">
-
-<button
-class="timbrar"
-onclick="timbrarFactura()">
-
-Timbrar
-
-</button>
-
-<button
-class="cancelar"
-onclick="cancelarFactura()">
-
-Cancelar
-
-</button>
-
-</div>
-
-</div>
-
-
-<!-- CHECKBOXES OCULTOS -->
-<div
-class="decoradoresOcultos">
-
-<input type="checkbox" value="pdf">
-
-<input type="checkbox" value="xml">
-
-<input type="checkbox" value="json">
-
-<input type="checkbox" value="txt">
-
-<input type="checkbox" value="email">
-
-</div>
 <!-- Panel viejo-->
 
 <div class="panel resumen">
-<hr>
 
 <div class="timbrado">
 
@@ -433,20 +346,90 @@ $0
 <h2 id="total"> $0 </h2>
 
 <!--Botn de timbrar factura -->
-<button class="verde" onclick="timbrarFactura()"> Timbrar Factura </button>
+<button type="button" class="verde" onclick="timbrarFactura()"> Timbrar Factura </button>
 
 <!--Boton de cancelar factura -->
-<button
-class="cancelar"
-onclick="cancelarFactura()">
+<button type="button" class="cancelar" onclick="cancelarFactura()">
 
-Cancelar
+Cancelar timbrado
 
 </button>
 
 </div>
 
 </div>
+<!-- Panel nuevo-->
+<div class="panel acciones">
+
+<h2>Exportar</h2>
+
+<div class="decoradores">
+
+<!--Botones de decoradores -->
+<!--Cada botón activa un decorador específico-->
+<!--PDF-->
+<button type="button" onclick="activarDecorador('pdf')">
+<img src="/static/icons/pdf.png" class="btn-icon">
+PDF
+</button>
+
+
+<!--XML-->
+<button type="button" onclick="activarDecorador('xml')">
+<img src="/static/icons/xml.png" class="btn-icon">
+XML
+</button>
+
+<!--JSON  -->
+<button type="button" onclick="activarDecorador('json')">
+<img src="/static/icons/json.png" class="btn-icon">
+JSON
+</button>
+
+<!--TXT  -->
+<button type="button" onclick="activarDecorador('txt')">
+<img src="/static/icons/txt.png" class="btn-icon">
+TXT
+</button>
+
+<!--EMAIL  -->
+<button type="button" onclick="activarDecorador('email')">
+<img src="/static/icons/email.png" class="btn-icon">
+Email
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="state-buttons">
+
+
+
+</div>
+
+</div>
+
+
+<!-- CHECKBOXES OCULTOS -->
+<div
+class="decoradoresOcultos">
+
+<input type="checkbox" value="pdf">
+
+<input type="checkbox" value="xml">
+
+<input type="checkbox" value="json">
+
+<input type="checkbox" value="txt">
+
+<input type="checkbox" value="email">
+
+</div>
+
 
 </div>
 
@@ -460,15 +443,87 @@ Cancelar
 <script type="module" src="{% static 'js/main.js' %}"></script>
 </div>
 </form>
-<!--Esto ayuda a que no se cre la factura si un campo esta vacio -->
+<!--Esto ayuda a que no se cre la factura si un campo esta -->
 <script>
 
-function validarFormulario(){
+function validarFormulario() {
 
 const form =
 document.getElementById(
 'formFactura'
 );
+
+if (!form.checkValidity()) {
+
+form.reportValidity();
+
+return false;
+
+}
+
+return true;
+
+}
+
+
+// BLOQUEAR PDF
+function activarPDF(){
+
+if(!validarFormulario()){
+return;
+}
+
+// TU CÓDIGO ORIGINAL PDF AQUÍ
+generarDecoradores();
+
+}
+
+
+// BLOQUEAR TIMBRADO
+function timbrarFactura(){
+
+if(!validarFormulario()){
+return;
+}
+
+// TU CÓDIGO ORIGINAL TIMBRAR AQUÍ
+
+}
+
+
+// BLOQUEAR DECORADORES
+function validarFormulario() {
+
+const form =
+document.getElementById(
+"formFactura"
+);
+
+if (!form.checkValidity()) {
+
+form.reportValidity();
+
+return false;
+
+}
+
+return true;
+
+}
+
+
+function validarFormulario(){
+
+const form =
+document.getElementById(
+"formFactura"
+);
+
+if(!form){
+
+return true;
+
+}
 
 if(!form.checkValidity()){
 
@@ -482,42 +537,40 @@ return true;
 
 }
 
-const botones =
-document.querySelectorAll(
-'button'
-);
 
-botones.forEach(btn=>{
-
-const txt=
-btn.textContent
-.toLowerCase();
-
-if(
-txt.includes('generar')
-||
-txt.includes('timbrar')
-){
-
-btn.addEventListener(
-'click',
-function(e){
+function activarDecorador(tipo){
 
 if(
 !validarFormulario()
 ){
 
-e.preventDefault();
-
-return;
+return false;
 
 }
 
-});
+document
+.querySelector(
+`input[value="${tipo}"]`
+)
+.checked=true;
+
+generarDecoradores();
+
+return false;
 
 }
+// ACTIVAR CHECKBOX
+document
+.querySelector(
+`input[value="${tipo}"]`
+)
+.checked = true;
 
-});
+
+// GENERAR ARCHIVO
+generarDecoradores();
+
+
 
 </script>
 </body>

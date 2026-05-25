@@ -246,7 +246,17 @@ window.irFactura = function(tipo = null){
 // ==================== TIMBRAR ====================
 
 window.timbrarFactura = function(){
+    const form = document.getElementById("formFactura");
 
+if(
+!form.checkValidity()
+){
+
+form.reportValidity();
+
+return;
+
+}
     facturaEstado.siguiente();
 
     actualizarEstadoVisual();
@@ -640,7 +650,41 @@ function activarDecorador(tipo){
 //==========================
 
 function generarDecoradores(){
+    if(
+!validarFormulario()
+){
 
+return;
+
+}
+    function validarFormulario(){
+
+const requeridos=
+document.querySelectorAll(
+"#formFactura [required]"
+);
+
+for(let campo of requeridos){
+
+if(
+!campo.value
+||
+!campo.checkValidity()
+){
+
+campo.reportValidity();
+
+campo.focus();
+
+return false;
+
+}
+
+}
+
+return true;
+
+}
     console.log("Generando...");
 
     let factura = new Factura();
