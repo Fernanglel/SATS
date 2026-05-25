@@ -104,6 +104,19 @@ else{
         "tipoUsuario",
         tipoUsuario
     );
+    console.log(
+"NOMBRE GUARDADO:",
+localStorage.getItem(
+"nombre"
+)
+);
+
+console.log(
+"RFC GUARDADO:",
+localStorage.getItem(
+"rfc"
+)
+);
     console.log("RFC:", rfc);
     console.log("LONGITUD:", rfc.length);
     console.log("TIPO:", tipoUsuario);
@@ -209,7 +222,33 @@ Generar Factura
 
 }
 
+// ==================== Formulario timbrado ====================
+function validarFormulario(){
 
+const form =
+document.getElementById(
+"formFactura"
+);
+
+if(!form){
+
+return true;
+
+}
+
+if(
+!form.checkValidity()
+){
+
+form.reportValidity();
+
+return false;
+
+}
+
+return true;
+
+}
 // ==================== IR A FACTURA ====================
 
 window.irFactura = function(tipo = null){
@@ -244,64 +283,87 @@ window.irFactura = function(tipo = null){
 }
 
 // ==================== TIMBRAR ====================
-
-window.timbrarFactura = function(){
-    const form = document.getElementById("formFactura");
+window.timbrarFactura=function(){
 
 if(
-!form.checkValidity()
+!validarFormulario()
 ){
-
-form.reportValidity();
 
 return;
 
 }
-    facturaEstado.siguiente();
 
-    actualizarEstadoVisual();
 
-    // UUID
-    const uuid = generarUUID();
 
-    // FECHA
-    const fecha =
-        new Date().toLocaleString();
+const uuid=
+generarUUID();
 
-    // SELLO
-    const sello =
-        generarSello();
+const fecha=
+new Date()
+.toLocaleString();
 
-    // CADENA
-    const cadena =
-        generarCadena({
+document
+.getElementById(
+"uuid"
+)
+.value=
+uuid;
 
-            uuid: uuid,
+document
+.getElementById(
+"fechaTimbrado"
+)
+.value=
+fecha;
 
-            fecha: fecha,
+document
+.getElementById(
+"selloDigital"
+)
+.value=
+generarSello();
 
-            total:
-                document.getElementById("total").innerText,
+document
+.getElementById(
+"cadenaOriginal"
+)
+.value=
+generarCadena({
 
-            rfc:
-                document.getElementById("rfcEmisor").innerText
-        });
+uuid,
 
-    // MOSTRAR
-    document.getElementById("uuid")
-        .innerText = uuid;
+fecha,
 
-    document.getElementById("fechaTimbrado")
-        .innerText = fecha;
+total:
+document
+.getElementById(
+"total"
+)
+?.innerText
 
-    document.getElementById("selloDigital")
-        .value = sello;
+||
 
-    document.getElementById("cadenaOriginal")
-        .value = cadena;
+"$0",
 
-    mostrarModal("Factura Timbrada");
+rfc:
+localStorage
+.getItem(
+"rfc"
+)
+
+||
+
+""
+
+});
+
+alert(
+"Factura Timbrada"
+);
+
 }
+
+
 
 // ==================== PAGAR ====================
 
@@ -316,13 +378,41 @@ window.pagarFactura = function(){
 
 // ==================== CANCELAR ====================
 
-window.cancelarFactura = function(){
+window.cancelarFactura =
+function(){
 
-    facturaEstado.cancelar();
+facturaEstado.cancelar();
 
-    actualizarEstadoVisual();
+actualizarEstadoVisual();
 
-    mostrarModal("Factura Cancelada");
+document
+.getElementById(
+"uuid"
+)
+.value="";
+
+document
+.getElementById(
+"fechaTimbrado"
+)
+.value="";
+
+document
+.getElementById(
+"selloDigital"
+)
+.value="";
+
+document
+.getElementById(
+"cadenaOriginal"
+)
+.value="";
+
+mostrarModal(
+"Factura Cancelada"
+);
+
 }
 
 //====================== Timbrar ==============================
@@ -367,19 +457,35 @@ function generarSello(){
 // ====================== Modal ======================
 function mostrarModal(texto){
 
-    document.getElementById("tituloModal")
-        .innerText = texto;
+const modal=
+document.getElementById(
+"modalEstado"
+);
 
-    document.getElementById("modalEstado")
-        .style.display = "flex";
+const titulo=
+document.getElementById(
+"tituloModal"
+);
+
+if(
+modal
+&&
+titulo
+){
+
+titulo.innerText=
+texto;
+
+modal.style.display=
+"flex";
+
+}else{
+
+alert(texto);
+
 }
 
-window.cerrarModal = function(){
-
-    document.getElementById("modalEstado")
-        .style.display = "none";
 }
-
 
 // ==================== CARGAR FACTURA ====================
 window.cargarFactura = async function(){
@@ -388,39 +494,53 @@ window.cargarFactura = async function(){
 
     const d = await generarFacturaAleatoria();
 
-    const rfc=
+    // ==================== USUARIO LOGUEADO ====================
 
+const rfcUsuario =
 localStorage.getItem(
 "rfc"
 );
 
-localStorage.setItem(
-"factura",
-
-JSON.stringify(
-d
-)
-);
-document
-.getElementById(
-"usuarioRFC"
-)
-.value=
-rfc;
-
-
-// si backend guarda nombre
-document
-.getElementById(
-"usuarioNombre"
-)
-.value=
-
+const nombreUsuario =
 localStorage.getItem(
 "nombre"
-)
+);
+
+localStorage.setItem(
+"factura",
+JSON.stringify(d)
+);
+
+// RFC
+const inputRFC =
+document.getElementById(
+"usuarioRFC"
+);
+
+if(inputRFC){
+
+inputRFC.value =
+rfcUsuario
 ||
-d.nombreEmisor;
+"Sin RFC";
+
+}
+
+// NOMBRE
+const inputNombre =
+document.getElementById(
+"usuarioNombre"
+);
+
+if(inputNombre){
+
+inputNombre.value =
+nombreUsuario
+||
+"Sin nombre";
+
+}
+
 
     //Nueva generar factura 
     document.getElementById(
@@ -449,46 +569,61 @@ document.getElementById(
 d.precio;
     console.log("DATOS:", d);
 
-    const uuid = generarUUID();
-    const fecha = new Date().toLocaleString();
-    const sello = generarSello();
+   
 
-    document.getElementById("uuid").value = uuid;
-    document.getElementById("fechaTimbrado").value = fecha;
-    document.getElementById("selloDigital").value = sello;
-
-    document.getElementById("cadenaOriginal").value =
-    generarCadena({
-        uuid,
-        fecha,
-        total: d.total,
-        rfc: d.rfcEmisor
-    });
-    const fechaTimbrado = new Date().toLocaleString();
-    const selloDigital = generarSello();
-
-    const cadenaOriginal = generarCadena({
-    uuid,
-    fecha: fechaTimbrado,
-    total: d.total,
-    rfc: d.rfcEmisor
-});
     if(!d) return;
-    facturaEstado.siguiente();
-    actualizarEstadoVisual();
 
     localStorage.setItem(
     "factura",
     JSON.stringify(d)
 );
 //
+// REINICIAR TIMBRADO VISUAL
 
-    //
-    d.uuid = uuid;
-    d.fechaTimbrado = fechaTimbrado;
-    d.selloDigital = selloDigital;
-    d.cadenaOriginal = cadenaOriginal;
-    d.estado = "Timbrada";
+facturaEstado =
+new FacturaState();
+
+document
+.getElementById(
+"uuid"
+)
+.value="";
+
+document
+.getElementById(
+"fechaTimbrado"
+)
+.value="";
+
+document
+.getElementById(
+"selloDigital"
+)
+.value="";
+
+document
+.getElementById(
+"cadenaOriginal"
+)
+.value="";
+
+const estadoHTML =
+document.getElementById(
+"estadoFactura"
+);
+
+if(
+estadoHTML
+){
+
+estadoHTML.innerText =
+"Pendiente";
+
+estadoHTML.style.color =
+"orange";
+
+}
+   
     // EMISOR
     document.getElementById("rfcEmisor").innerText = d.rfcEmisor;
     document.getElementById("nombreEmisor").innerText = d.nombreEmisor;
@@ -514,10 +649,18 @@ d.precio;
     document.getElementById("total").innerText ="$" + Number(d.total).toFixed(2);
     
     //Cadena
-    document.getElementById("uuid").value = uuid;
-    document.getElementById("fechaTimbrado").value = fechaTimbrado;
-    document.getElementById("selloDigital").value = selloDigital;
-    document.getElementById("cadenaOriginal").value = cadenaOriginal;
+    document.getElementById("uuid").value="";
+    document.getElementById("fechaTimbrado").value="";
+    document.getElementById("selloDigital").value="";
+    document.getElementById("cadenaOriginal").value="";
+
+const estado =document.getElementById("estadoFactura");
+
+if(estado){
+
+estado.innerText="Pendiente";
+
+}
     //  GUARDAR EN BD (AQUÍ VA EL FETCH)
     fetch("/guardar-factura/", {
         method: "POST",
@@ -548,99 +691,62 @@ d.precio;
     .catch(err => {
         console.error("ERROR AL GUARDAR:", err);
     });
+    
 };
 
-
-// ==================== DECORATORS ====================
-
-
-window.generarDecoradores = function () {
-
-    const d = JSON.parse(
-        localStorage.getItem("factura")
-    );
-
-    if (!d) {
-        alert("No hay factura");
-        return;
-    }
-
-    let factura = new Factura(d);
-
-    const seleccionados = Array.from(
-        document.querySelectorAll(
-            ".decoradoresOcultos input:checked"
-        )
-    ).map(c => c.value);
-
-    const decoradores = {
-        pdf: PDFDecorator,
-        xml: XMLDecorator,
-        json: JSONDecorator,
-        txt: TXTDecorator,
-        qr: QRDecorator,
-        email: EmailDecorator
-    };
-
-    seleccionados.forEach(op => {
-
-        if (decoradores[op]) {
-            factura =
-                new decoradores[op](factura);
-        }
-
-    });
-
-    factura.generar();
-
-    const resultado =
-        document.getElementById(
-            "resultadoDecorador"
-        );
-
-    if (resultado) {
-
-        resultado.innerText =
-            `Factura generada en: ${seleccionados.join(", ").toUpperCase()}`;
-    }
-
-};
 
 // ==================== ACTIVAR DECORADOR ====================
 
 function activarDecorador(tipo){
 
-    tipo = tipo.toLowerCase();
+if(
+!validarFormulario()
+){
 
-    console.log("Decorador seleccionado:", tipo);
+return;
 
-    // limpiar todos
-    document
-        .querySelectorAll(
-            '.decoradoresOcultos input'
-        )
-        .forEach(c=>c.checked=false);
+}
 
-    // buscar checkbox
-    const checkbox =
-        document.querySelector(
-            `input[value="${tipo}"]`
-        );
+tipo =
+String(
+tipo
+)
+.toLowerCase();
 
-    if(!checkbox){
+console.log(
+"Decorador seleccionado:",
+tipo
+);
 
-        console.error(
-            "No existe decorador:",
-            tipo
-        );
+// limpiar checks
 
-        return;
+document
+.querySelectorAll(
+".decoradoresOcultos input"
+)
+.forEach(
+c =>
+c.checked =
+false
+);
 
-    }
+const checkbox =
+document.querySelector(
+`input[value="${tipo}"]`
+);
 
-    checkbox.checked = true;
+if(
+!checkbox
+){
 
-    generarDecoradores();
+return;
+
+}
+
+checkbox.checked =
+true;
+
+window.generarDecoradores();
 
 }
 
@@ -648,117 +754,83 @@ function activarDecorador(tipo){
 //==========================
 // GENERADOR
 //==========================
-
 function generarDecoradores(){
-    if(
-!validarFormulario()
-){
 
-return;
-
-}
-    function validarFormulario(){
-
-const requeridos=
-document.querySelectorAll(
-"#formFactura [required]"
+console.log(
+"Generando..."
 );
 
-for(let campo of requeridos){
+let factura =
+new Factura();
 
 if(
-!campo.value
-||
-!campo.checkValidity()
+document.querySelector(
+'input[value="pdf"]'
+)?.checked
 ){
 
-campo.reportValidity();
-
-campo.focus();
-
-return false;
-
-}
+factura =
+new PDFDecorator(
+factura
+);
 
 }
 
-return true;
+if(
+document.querySelector(
+'input[value="xml"]'
+)?.checked
+){
 
-}
-    console.log("Generando...");
-
-    let factura = new Factura();
-
-    if(
-        document.querySelector(
-            'input[value="pdf"]'
-        ).checked
-    ){
-
-        factura =
-            new PDFDecorator(
-                factura
-            );
-
-    }
-
-    if(
-        document.querySelector(
-            'input[value="xml"]'
-        ).checked
-    ){
-
-        factura =
-            new XMLDecorator(
-                factura
-            );
-
-    }
-
-    if(
-        document.querySelector(
-            'input[value="json"]'
-        ).checked
-    ){
-
-        factura =
-            new JSONDecorator(
-                factura
-            );
-
-    }
-
-    if(
-        document.querySelector(
-            'input[value="txt"]'
-        ).checked
-    ){
-
-        factura =
-            new TXTDecorator(
-                factura
-            );
-
-    }
-
-    if(
-        document.querySelector(
-            'input[value="email"]'
-        ).checked
-    ){
-
-        factura =
-            new EmailDecorator(
-                factura
-            );
-
-    }
-
-    // ESTE ES EL PASO CLAVE
-    factura.generar();
+factura =
+new XMLDecorator(
+factura
+);
 
 }
 
+if(
+document.querySelector(
+'input[value="json"]'
+)?.checked
+){
+
+factura =
+new JSONDecorator(
+factura
+);
+
+}
+
+if(
+document.querySelector(
+'input[value="txt"]'
+)?.checked
+){
+
+factura =
+new TXTDecorator(
+factura
+);
+
+}
+
+if(
+document.querySelector(
+'input[value="email"]'
+)?.checked
+){
+
+factura =
+new EmailDecorator(
+factura
+);
+
+}
+
+factura.generar();
+
+}
 
 //==========================
 // EXPORTAR
@@ -786,6 +858,7 @@ window.onload = () => {
     // Página de factura
     if(document.getElementById("rfcEmisor")){
         cargarFactura();
+        
     }
 };
 
@@ -811,15 +884,16 @@ console.log("MAIN JS CARGADO");
 // EXPORTAR A WINDOW
 //========================
 
-window.activarDecorador = activarDecorador;
+window.activarDecorador =
+activarDecorador;
 
-window.activarPDF = function(){
+window.generarDecoradores =
+generarDecoradores;
 
-    activarDecorador("pdf");
-    window.generarDecoradores = generarDecoradores;
+window.activarPDF =
+() =>
+activarDecorador(
+"pdf"
+);
 
-window.timbrarFactura = timbrarFactura;
-
-window.cancelarFactura = cancelarFactura;
-};
 

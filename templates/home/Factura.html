@@ -96,10 +96,12 @@ Completa los datos para generar tu factura
 
 <input
 id="usuarioNombre"
+placeholder="Nombre del usuario"
 readonly>
 
 <input
 id="usuarioRFC"
+placeholder="RFC del usuario"
 readonly>
 
 </div>
@@ -537,40 +539,62 @@ return true;
 
 }
 
-
 function activarDecorador(tipo){
 
-if(
-!validarFormulario()
-){
+if(!tipo){
 
-return false;
+console.error(
+"Tipo vacío"
+);
+
+return;
+
+}
+
+tipo =
+String(
+tipo
+)
+.toLowerCase();
+
+console.log(
+"Decorador seleccionado:",
+tipo
+);
+
+// limpiar checks
+document
+.querySelectorAll(
+".decoradoresOcultos input"
+)
+.forEach(
+c=>c.checked=false
+);
+
+// buscar
+const checkbox =
+document.querySelector(
+`input[value="${tipo}"]`
+);
+
+if(!checkbox){
+
+console.error(
+"No existe:",
+tipo
+);
+
+return;
 
 }
 
-document
-.querySelector(
-`input[value="${tipo}"]`
-)
-.checked=true;
+checkbox.checked =
+true;
 
+// generar
 generarDecoradores();
-
-return false;
 
 }
-// ACTIVAR CHECKBOX
-document
-.querySelector(
-`input[value="${tipo}"]`
-)
-.checked = true;
-
-
-// GENERAR ARCHIVO
-generarDecoradores();
-
-
 
 </script>
 </body>

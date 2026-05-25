@@ -691,6 +691,39 @@ flex:1;
 margin-bottom:25px;
 }
 
+.usuario input{
+
+background:#f8fafc;
+
+border:2px solid #7a1f2b;
+
+padding:14px;
+
+border-radius:12px;
+
+font-size:15px;
+
+font-weight:600;
+
+color:#333;
+
+}
+
+.usuario input:focus{
+
+outline:none;
+
+box-shadow:
+0 0 10px
+rgba(
+122,
+31,
+43,
+0.25
+);
+
+}
+
 .decoradoresOcultos{
 
 display:none;
