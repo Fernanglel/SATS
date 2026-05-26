@@ -295,138 +295,129 @@ $${d.total}
 
 export async function descargarPDF(){
 
-    const factura =
-    localStorage.getItem("factura");
+try{
 
-    if(!factura){
+const cantidad = Number(
+document.getElementById("cantidad")?.value || 0
+);
 
-        alert(
-            "Primero genera una factura"
-        );
+const precio = Number(
+document.getElementById("precio")?.value || 0
+);
 
-        return;
+const subtotal =
+cantidad * precio;
 
-    }
+const iva =
+subtotal * 0.16;
 
-    try{
+const total =
+subtotal + iva;
 
-        const data =
-        JSON.parse(factura);
 
-        const response =
-        await fetch(
+const data={
 
-            "/generar-pdf/",
+serie:
+document.getElementById("serie")?.value || "A",
 
-            {
+folio:
+document.getElementById("folio")?.value || "",
 
-                method:"POST",
+fecha:
+document.getElementById("fecha")?.value || "",
 
-                headers:{
+nombreEmisor:
+document.getElementById("nombreEmisor")?.value || "",
 
-                    "Content-Type":
-                    "application/json"
+rfcEmisor:
+document.getElementById("rfcEmisor")?.value || "",
 
-                },
+nombreReceptor:
+document.getElementById("nombreReceptor")?.value || "",
 
-                body:
-                JSON.stringify(data)
+rfcReceptor:
+document.getElementById("rfcReceptor")?.value || "",
 
-            }
+claveConcepto:
+document.getElementById("claveConcepto")?.value || "",
 
-        );
+descripcion:
+document.getElementById("descripcion")?.value || "",
 
-        if(!response.ok){
+cantidad,
 
-            throw new Error(
-                "Error generando PDF"
-            );
+precio,
 
-        }
+importe:
+subtotal,
 
-        const blob =
-        await response.blob();
+subtotal,
 
-        const url =
-        URL.createObjectURL(
-            blob
-        );
+iva,
 
-        const link =
-        document.createElement(
-            "a"
-        );
+total
 
-        // ====================
-        // NOMBRE DEL BACKEND
-        // ====================
+};
 
-        let nombre =
-        "FacturaSAT.pdf";
 
-        const disposition =
+const response=
 
-        response.headers.get(
-            "Content-Disposition"
-        );
+await fetch(
 
-        if(disposition){
+"/generar-pdf/",
 
-            const match =
+{
 
-            disposition.match(
-                /filename="?([^"]+)"?/
-            );
+method:"POST",
 
-            if(
+headers:{
 
-                match &&
-                match[1]
+"Content-Type":
+"application/json"
 
-            ){
+},
 
-                nombre =
-                match[1];
-
-            }
-
-        }
-
-        link.href =
-        url;
-
-        link.download =
-        nombre;
-
-        document.body.appendChild(
-            link
-        );
-
-        link.click();
-
-        link.remove();
-
-        URL.revokeObjectURL(
-            url
-        );
-
-    }
-
-    catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "No se pudo generar PDF"
-        );
-
-    }
+body:
+JSON.stringify(data)
 
 }
 
+);
 
+if(!response.ok){
+
+throw new Error(
+"Error generando PDF"
+);
+
+}
+
+const blob=
+await response.blob();
+
+const url=
+URL.createObjectURL(
+blob
+);
+
+window.open(
+url,
+"_blank"
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"No se pudo generar PDF"
+);
+
+}
+
+}
 // ====================
 // QR
 // ====================

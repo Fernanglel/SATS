@@ -92,11 +92,9 @@ def login_view(request):
     if request.method == "POST":
 
         rfc = request.POST.get("rfc")
-
         password = request.POST.get("password")
 
         print("RFC:", rfc)
-
         print("PASSWORD:", password)
 
         try:
@@ -107,26 +105,49 @@ def login_view(request):
 
             if user.password == password:
 
+                # GUARDAR SESION
+                request.session["cliente_id"] = user.id
+                request.session["cliente_nombre"] = user.nombre
+                request.session["cliente_rfc"] = user.rfc
+
                 return JsonResponse({
-                    "ok": True
+
+                    "ok": True,
+
+                    "nombre":
+                    user.nombre,
+
+                    "rfc":
+                    user.rfc
+
                 })
 
             else:
 
                 return JsonResponse({
+
                     "ok": False,
-                    "mensaje": "Contraseña incorrecta"
+
+                    "mensaje":
+                    "Contraseña incorrecta"
+
                 })
 
         except Cliente.DoesNotExist:
 
             return JsonResponse({
+
                 "ok": False,
-                "mensaje": "Usuario no existe"
+
+                "mensaje":
+                "Usuario no existe"
+
             })
 
     return JsonResponse({
+
         "ok": False
+
     })
 
 
@@ -224,13 +245,13 @@ def guardar_factura(request):
                     data.get("clave"),
 
                     "subtotal":
-                    data.get("subtotal"),
+                   float(data.get("subtotal", 0) or 0),
 
                     "iva":
-                    data.get("iva"),
+                    float(data.get("iva", 0) or 0),
 
                     "total":
-                    data.get("total"),
+                    float(data.get("total", 0) or 0 ),
 
                     "claveConcepto":
                     data.get("claveConcepto"),
@@ -245,7 +266,7 @@ def guardar_factura(request):
                     data.get("precio"),
 
                     "importe":
-                    data.get("importe")
+                    float(data.get("importe", 0) or 0),
 
                 })
 
@@ -413,80 +434,6 @@ def obtener_datos_factura(request):
 
         })
         
-# =========================
-# PDF FACTURA   
-# =========================
-from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
-from xhtml2pdf import pisa
-from io import BytesIO
-
-@csrf_exempt
-def generar_pdf(request):
-
-    if request.method != "POST":
-        return HttpResponse(status=405)
-
-    data = json.loads(request.body)
-
-    html = render_to_string(
-
-        "PDF/factura_sat.html",
-
-        {
-            "factura": {
-
-                "serie": data.get("serie"),
-                "folio": data.get("folio"),
-                "uuid": str(uuid.uuid4()),
-                "fecha": data.get("fecha"),
-
-                "nombre_emisor":
-                data.get("nombreEmisor"),
-
-                "rfc_emisor":
-                data.get("rfcEmisor"),
-
-                "nombre_receptor":
-                data.get("nombreReceptor"),
-
-                "rfc_receptor":
-                data.get("rfcReceptor"),
-
-                "subtotal":
-                data.get("subtotal"),
-
-                "iva":
-                data.get("iva"),
-
-                "total":
-                data.get("total"),
-
-                "conceptos": [
-
-                    {
-                        "clave":
-                        data.get("claveConcepto"),
-
-                        "descripcion":
-                        data.get("descripcion"),
-
-                        "cantidad":
-                        data.get("cantidad"),
-
-                        "valor_unitario":
-                        data.get("precio"),
-
-                        "importe":
-                        data.get("importe")
-                    }
-
-                ]
-
-            }
-        }
-
-    )
 
 # =========================
 # PDF FACTURA
@@ -523,10 +470,16 @@ def generar_pdf(request):
                 "fecha": data.get("fecha"),
 
                 "nombre_emisor":
-                data.get("nombreEmisor"),
+request.session.get(
+    "cliente_nombre",
+    data.get("nombreEmisor")
+),
 
-                "rfc_emisor":
-                data.get("rfcEmisor"),
+"rfc_emisor":
+request.session.get(
+    "cliente_rfc",
+    data.get("rfcEmisor")
+),
 
                 "nombre_receptor":
                 data.get("nombreReceptor"),
@@ -535,13 +488,13 @@ def generar_pdf(request):
                 data.get("rfcReceptor"),
 
                 "subtotal":
-                data.get("subtotal"),
+                float(data.get("subtotal", 0) or 0),
 
                 "iva":
-                data.get("iva"),
+                float(data.get("iva", 0) or 0),
 
                 "total":
-                data.get("total"),
+                float(data.get("total", 0) or 0),
 
                 "conceptos": [
 
@@ -560,7 +513,7 @@ def generar_pdf(request):
                         data.get("precio"),
 
                         "importe":
-                        data.get("importe")
+                        float(data.get("importe,0") or 0),
 
                     }
 
@@ -654,46 +607,4 @@ def generar_pdf(request):
     )
 
     return response
-    # =========================
-    # GENERAR NOMBRE
-    # =========================
-
-    rfc = (
-        data.get(
-            "rfcEmisor",
-            "XAXX010101000"
-        )
-        .replace(" ", "")
-        .upper()
-    )
-
-    serie = data.get(
-        "serie",
-        "A"
-    )
-
-    folio = str(
-        data.get(
-            "folio",
-            "0001"
-        )
-    )
-
-    nombre_archivo = generar_nombre_factura(
-        rfc,
-        serie,
-        folio
-    )
-
-    print("PDF:", nombre_archivo)
-
-    response = HttpResponse(
-        resultado.getvalue(),
-        content_type="application/pdf"
-    )
-
-    response["Content-Disposition"] = (
-        f'attachment; filename="{nombre_archivo}"'
-    )
-
-    return response
+   

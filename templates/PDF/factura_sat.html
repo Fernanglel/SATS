@@ -11,7 +11,7 @@
 
 <div class="header">
 
-<h1>CFDI</h1>
+<h1>SAT</h1>
 
 <p>Serie {{ factura.serie }} | Folio {{ factura.folio }}</p>
 
@@ -50,47 +50,70 @@ DATOS DEL RECEPTOR
 </div>
 
 
-<table>
+<table
+style="
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+font-size:9px;
+">
 
-<thead>
+<tr
+style="
+background:#7a1f2b;
+color:white;
+">
 
-<tr>
+<th width="15%">
+Clave
+</th>
 
-<th>Clave</th>
+<th width="35%">
+Descripción
+</th>
 
-<th>Descripción</th>
+<th width="15%">
+Cant.
+</th>
 
-<th>Cantidad</th>
+<th width="15%">
+Precio
+</th>
 
-<th>Precio</th>
-
-<th>Importe</th>
+<th width="20%">
+Importe
+</th>
 
 </tr>
 
-</thead>
-
-<tbody>
 
 {% for c in factura.conceptos %}
 
 <tr>
 
-<td>{{ c.clave }}</td>
+<td>
+{{ c.clave }}
+</td>
 
-<td>{{ c.descripcion }}</td>
+<td>
+{{ c.descripcion }}
+</td>
 
-<td>{{ c.cantidad }}</td>
+<td>
+{{ c.cantidad }}
+</td>
 
-<td>${{ c.valor_unitario }}</td>
+<td>
+${{ c.valor_unitario }}
+</td>
 
-<td>${{ c.importe }}</td>
+<td>
+${{ c.importe }}
+</td>
 
 </tr>
 
 {% endfor %}
-
-</tbody>
 
 </table>
 

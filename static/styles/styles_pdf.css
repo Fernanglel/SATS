@@ -4,55 +4,53 @@ margin:18px;
 }
 
 body{
+
 font-family:Helvetica;
-color:#2c2c2c;
+
 font-size:10px;
+
+color:#333;
+
 }
 
 .header{
+
 background:#7a1f2b;
-color:white;
+
 padding:18px;
-border-radius:8px;
+
+color:white;
+
 }
 
 .header h1{
+
 font-size:22px;
-margin-bottom:4px;
+
 }
 
 .section{
 
-border:1px solid #d8d8d8;
-
-margin-top:15px;
+border:1px solid #ddd;
 
 padding:10px;
 
-border-radius:6px;
+margin-top:10px;
+
 }
 
 .section-title{
 
+font-size:11px;
+
 color:#7a1f2b;
 
-font-size:12px;
+font-weight:bold;
 
 border-bottom:2px solid #7a1f2b;
 
 padding-bottom:5px;
 
-margin-bottom:8px;
-
-}
-
-.row{
-margin-bottom:6px;
-}
-
-.label{
-font-weight:bold;
-color:#666;
 }
 
 table{
@@ -61,23 +59,21 @@ width:100%;
 
 border-collapse:collapse;
 
-margin-top:18px;
+table-layout:fixed;
 
-}
-
-thead{
-
-background:#7a1f2b;
-
-color:white;
+margin-top:15px;
 
 }
 
 th{
 
-padding:10px;
+background:#7a1f2b;
 
-font-size:10px;
+color:white;
+
+padding:8px;
+
+font-size:9px;
 
 }
 
@@ -85,23 +81,23 @@ td{
 
 padding:8px;
 
-border-bottom:1px solid #ddd;
+border:1px solid #ddd;
+
+font-size:9px;
 
 }
 
 .total-box{
 
+width:240px;
+
+margin-left:auto;
+
 margin-top:20px;
-
-margin-left:320px;
-
-width:230px;
 
 border:2px solid #7a1f2b;
 
 padding:12px;
-
-background:#faf6f7;
 
 }
 
@@ -121,12 +117,8 @@ margin-top:30px;
 
 font-size:8px;
 
-color:#777;
-
 text-align:center;
 
-}
+color:#777;
 
-.qr{
-margin-top:20px;
 }
