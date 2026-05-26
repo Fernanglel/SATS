@@ -1,153 +1,650 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+
+<html lang="es">
+
 <head>
+
+    <!-- =========================================
+         CONFIGURACION GENERAL
+    ========================================== -->
+
     <meta charset="utf-8">
 
-    <link rel="stylesheet" href="{% static 'styles/styles_pdf.css' %}">
+    <!-- =========================================
+         HOJA DE ESTILOS PDF
+    ========================================== -->
+
+    <link
+    rel="stylesheet"
+    href="{% static 'styles/styles_pdf.css' %}">
+
 </head>
+
 
 <body>
 
+
+<!-- =========================================
+     ENCABEZADO PRINCIPAL CFDI
+========================================== -->
+
 <div class="header">
 
-<h1>SAT</h1>
+    <!-- =========================================
+         TABLA HEADER
+    ========================================== -->
 
-<p>Serie {{ factura.serie }} | Folio {{ factura.folio }}</p>
+    <table class="header-table">
 
-<p>UUID: {{ factura.uuid }}</p>
+        <tr>
+
+            <!-- =========================================
+                 INFORMACION EMPRESA
+            ========================================== -->
+
+            <td width="65%">
+
+                <!-- TITULO PRINCIPAL -->
+
+                <h1>
+                    FACTURA ELECTRÓNICA CFDI 4.0
+                </h1>
+
+                <!-- NOMBRE SISTEMA -->
+
+                <p class="empresa">
+
+                    Sistema Administrativo Tributario SATS
+
+                </p>
+
+            </td>
+
+
+            <!-- =========================================
+                 DATOS FACTURA
+            ========================================== -->
+
+            <td
+            width="35%"
+            class="header-right">
+
+                <!-- SERIE -->
+
+                <p>
+
+                    <span class="label">
+                        Serie:
+                    </span>
+
+                    {{ factura.serie }}
+
+                </p>
+
+                <!-- FOLIO -->
+
+                <p>
+
+                    <span class="label">
+                        Folio:
+                    </span>
+
+                    {{ factura.folio }}
+
+                </p>
+
+                <!-- FECHA -->
+
+                <p>
+
+                    <span class="label">
+                        Fecha:
+                    </span>
+
+                    {{ factura.fecha }}
+
+                </p>
+
+                <!-- UUID -->
+
+                <p>
+
+                    <span class="label">
+                        UUID:
+                    </span>
+
+                    {{ factura.uuid }}
+
+                </p>
+
+            </td>
+
+        </tr>
+
+    </table>
 
 </div>
 
 
-<div class="section">
 
-<div class="section-title">
-DATOS DEL EMISOR
+<!-- =========================================
+     INFORMACION FISCAL GENERAL
+========================================== -->
+
+<div class="fiscal-box">
+
+    <!-- TABLA INFORMACION CFDI -->
+
+    <table class="fiscal-table">
+
+        <!-- FILA 1 -->
+
+        <tr>
+
+            <!-- MONEDA -->
+
+            <td>
+
+                <span class="label">
+                    Moneda:
+                </span>
+
+                MXN
+
+            </td>
+
+            <!-- TIPO COMPROBANTE -->
+
+            <td>
+
+                <span class="label">
+                    Tipo Comprobante:
+                </span>
+
+                Ingreso
+
+            </td>
+
+            <!-- VERSION CFDI -->
+
+            <td>
+
+                <span class="label">
+                    Versión:
+                </span>
+
+                4.0
+
+            </td>
+
+        </tr>
+
+
+        <!-- FILA 2 -->
+
+        <tr>
+
+            <!-- METODO PAGO -->
+
+            <td>
+
+                <span class="label">
+                    Método Pago:
+                </span>
+
+                PUE
+
+            </td>
+
+            <!-- FORMA PAGO -->
+
+            <td>
+
+                <span class="label">
+                    Forma Pago:
+                </span>
+
+                01 - Efectivo
+
+            </td>
+
+            <!-- USO CFDI -->
+
+            <td>
+
+                <span class="label">
+                    Uso CFDI:
+                </span>
+
+                G03
+
+            </td>
+
+        </tr>
+
+    </table>
+
 </div>
 
-<p><span class="label">Nombre:</span>
-{{ factura.nombre_emisor }}</p>
-
-<p><span class="label">RFC:</span>
-{{ factura.rfc_emisor }}</p>
-
-</div>
 
 
-<div class="section">
+<!-- =========================================
+     TABLA EMISOR Y RECEPTOR
+========================================== -->
 
-<div class="section-title">
-DATOS DEL RECEPTOR
-</div>
-
-<p><span class="label">Nombre:</span>
-{{ factura.nombre_receptor }}</p>
-
-<p><span class="label">RFC:</span>
-{{ factura.rfc_receptor }}</p>
-
-</div>
-
-
-<table
-style="
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-font-size:9px;
-">
-
-<tr
-style="
-background:#7a1f2b;
-color:white;
-">
-
-<th width="15%">
-Clave
-</th>
-
-<th width="35%">
-Descripción
-</th>
-
-<th width="15%">
-Cant.
-</th>
-
-<th width="15%">
-Precio
-</th>
-
-<th width="20%">
-Importe
-</th>
-
-</tr>
-
-
-{% for c in factura.conceptos %}
+<table class="clientes-table">
 
 <tr>
 
-<td>
-{{ c.clave }}
-</td>
+    <!-- =========================================
+         EMISOR
+    ========================================== -->
 
-<td>
-{{ c.descripcion }}
-</td>
+    <td width="49%">
 
-<td>
-{{ c.cantidad }}
-</td>
+        <div class="section">
 
-<td>
-${{ c.valor_unitario }}
-</td>
+            <!-- TITULO -->
 
-<td>
-${{ c.importe }}
-</td>
+            <div class="section-title">
+
+                EMISOR
+
+            </div>
+
+            <!-- NOMBRE -->
+
+            <p>
+
+                <span class="label">
+                    Nombre:
+                </span>
+
+                {{ factura.nombre_emisor }}
+
+            </p>
+
+            <!-- RFC -->
+
+            <p>
+
+                <span class="label">
+                    RFC:
+                </span>
+
+                {{ factura.rfc_emisor }}
+
+            </p>
+
+            <!-- REGIMEN -->
+
+            <p>
+
+                <span class="label">
+                    Régimen Fiscal:
+                </span>
+
+                601 General de Ley Personas Morales
+
+            </p>
+
+        </div>
+
+    </td>
+
+
+
+    <!-- ESPACIADO -->
+
+    <td width="2%"></td>
+
+
+
+    <!-- =========================================
+         RECEPTOR
+    ========================================== -->
+
+    <td width="49%">
+
+        <div class="section">
+
+            <!-- TITULO -->
+
+            <div class="section-title">
+
+                RECEPTOR
+
+            </div>
+
+            <!-- NOMBRE -->
+
+            <p>
+
+                <span class="label">
+                    Nombre:
+                </span>
+
+                {{ factura.nombre_receptor }}
+
+            </p>
+
+            <!-- RFC -->
+
+            <p>
+
+                <span class="label">
+                    RFC:
+                </span>
+
+                {{ factura.rfc_receptor }}
+
+            </p>
+
+            <!-- CODIGO POSTAL -->
+
+            <p>
+
+                <span class="label">
+                    Código Postal:
+                </span>
+
+                58000
+
+            </p>
+
+        </div>
+
+    </td>
 
 </tr>
-
-{% endfor %}
 
 </table>
 
 
-<div class="total-box">
 
-<p>Subtotal:
-${{ factura.subtotal }}</p>
+<!-- =========================================
+     TABLA CONCEPTOS
+========================================== -->
 
-<p>IVA:
-${{ factura.iva }}</p>
+<table class="conceptos">
 
-<hr>
+    <!-- ENCABEZADOS -->
 
-<p class="total">
-TOTAL:
-${{ factura.total }}
-</p>
+    <tr>
+
+        <!-- CLAVE -->
+
+        <th width="15%">
+            Clave
+        </th>
+
+        <!-- DESCRIPCION -->
+
+        <th width="40%">
+            Descripción
+        </th>
+
+        <!-- CANTIDAD -->
+
+        <th width="15%">
+            Cantidad
+        </th>
+
+        <!-- PRECIO -->
+
+        <th width="15%">
+            Precio
+        </th>
+
+        <!-- IMPORTE -->
+
+        <th width="15%">
+            Importe
+        </th>
+
+    </tr>
+
+
+    <!-- RECORRER CONCEPTOS -->
+
+    {% for c in factura.conceptos %}
+
+    <tr>
+
+        <!-- CLAVE PRODUCTO -->
+
+        <td>
+            {{ c.clave }}
+        </td>
+
+        <!-- DESCRIPCION PRODUCTO -->
+
+        <td class="left">
+            {{ c.descripcion }}
+        </td>
+
+        <!-- CANTIDAD -->
+
+        <td class="right">
+            {{ c.cantidad }}
+        </td>
+
+        <!-- PRECIO UNITARIO -->
+
+        <td class="right">
+            ${{ c.valor_unitario }}
+        </td>
+
+        <!-- IMPORTE -->
+
+        <td class="right">
+            ${{ c.importe }}
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+
+
+<!-- =========================================
+     TOTALES FACTURA
+========================================== -->
+
+<div class="totales">
+
+    <table>
+
+        <!-- SUBTOTAL -->
+
+        <tr>
+
+            <td class="label">
+                Subtotal
+            </td>
+
+            <td class="right">
+                ${{ factura.subtotal }}
+            </td>
+
+        </tr>
+
+
+        <!-- IVA -->
+
+        <tr>
+
+            <td class="label">
+                IVA
+            </td>
+
+            <td class="right">
+                ${{ factura.iva }}
+            </td>
+
+        </tr>
+
+
+        <!-- TOTAL FINAL -->
+
+        <tr class="total-final">
+
+            <td>
+                TOTAL
+            </td>
+
+            <td class="right">
+                ${{ factura.total }}
+            </td>
+
+        </tr>
+
+    </table>
 
 </div>
 
 
-{% if qr_base64 %}
-<div class="qr">
-<img src="{{ qr_base64 }}" width="120">
-</div>
-{% endif %}
 
+<!-- =========================================
+     AREA QR + TIMBRADO SAT
+========================================== -->
+
+<table class="bottom-table">
+
+<tr>
+
+    <!-- =========================================
+         QR SAT
+    ========================================== -->
+
+    <td
+    width="28%"
+    valign="top">
+
+        {% if qr_base64 %}
+
+        <div class="qr">
+
+            <!-- IMAGEN QR -->
+
+            <img
+            src="{{ qr_base64 }}"
+            width="120">
+
+        </div>
+
+        {% endif %}
+
+    </td>
+
+
+
+    <!-- =========================================
+         INFORMACION TIMBRADO
+    ========================================== -->
+
+    <td
+    width="72%"
+    valign="top">
+
+        <div class="timbrado">
+
+            <!-- TITULO -->
+
+            <div class="section-title">
+
+                INFORMACIÓN FISCAL SAT
+
+            </div>
+
+
+            <!-- FECHA TIMBRADO -->
+
+            <p>
+
+                <span class="label">
+                    Fecha Timbrado:
+                </span>
+
+                {{ factura.fecha_timbrado }}
+
+            </p>
+
+
+            <!-- CERTIFICADO SAT -->
+
+            <p>
+
+                <span class="label">
+                    No. Certificado SAT:
+                </span>
+
+                00001000000504465028
+
+            </p>
+
+
+            <!-- SELLO DIGITAL -->
+
+            <p>
+
+                <span class="label">
+                    Sello Digital SAT:
+                </span>
+
+            </p>
+
+            <!-- TEXTO LARGO -->
+
+            <div class="texto-fiscal">
+
+                {{ factura.sello_digital }}
+
+            </div>
+
+
+            <!-- CADENA ORIGINAL -->
+
+            <p>
+
+                <span class="label">
+                    Cadena Original:
+                </span>
+
+            </p>
+
+            <!-- TEXTO LARGO -->
+
+            <div class="texto-fiscal">
+
+                {{ factura.cadena_original }}
+
+            </div>
+
+        </div>
+
+    </td>
+
+</tr>
+
+</table>
+
+
+
+<!-- =========================================
+     PIE DOCUMENTO
+========================================== -->
 
 <div class="footer">
 
-Documento generado electrónicamente · SATS
+    Este documento es una representación impresa de un CFDI 4.0.
 
 </div>
 
+
 </body>
+
 </html>

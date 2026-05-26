@@ -1,124 +1,445 @@
+/* =========================================================
+   CONFIGURACION PAGINA PDF
+========================================================= */
+
 @page{
-size:A4;
-margin:18px;
+
+    size:A4;
+
+    margin:24px;
 }
+
+
+/* =========================================================
+   ESTILOS GENERALES
+========================================================= */
 
 body{
 
-font-family:Helvetica;
+    font-family:Helvetica;
 
-font-size:10px;
+    font-size:9px;
 
-color:#333;
+    color:#2d3748;
 
+    line-height:1.5;
+
+    background:white;
 }
+
+
+/* =========================================================
+   HEADER PRINCIPAL
+========================================================= */
 
 .header{
 
-background:#7a1f2b;
+    border-bottom:
+    3px solid #7a1f2b;
 
-padding:18px;
+    padding-bottom:14px;
 
-color:white;
-
+    margin-bottom:18px;
 }
+
+
+/* TABLA HEADER */
+
+.header-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+
+/* TITULO CFDI */
 
 .header h1{
 
-font-size:22px;
+    color:#7a1f2b;
 
+    font-size:22px;
+
+    margin:0 0 4px 0;
+
+    font-weight:bold;
 }
+
+
+/* SUBTITULO EMPRESA */
+
+.empresa{
+
+    color:#6b7280;
+
+    font-size:9px;
+
+    margin:0;
+}
+
+
+/* DATOS DERECHA HEADER */
+
+.header-right{
+
+    text-align:right;
+
+    vertical-align:top;
+
+    font-size:8px;
+}
+
+
+/* ESPACIADO TEXTOS HEADER */
+
+.header-right p{
+
+    margin-bottom:4px;
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+.label{
+
+    font-weight:bold;
+
+    color:#111827;
+}
+
+
+/* =========================================================
+   INFORMACION FISCAL GENERAL
+========================================================= */
+
+.fiscal-box{
+
+    border:
+    1px solid #d6dbe3;
+
+    background:#fafafa;
+
+    padding:10px 12px;
+
+    margin-bottom:16px;
+}
+
+
+/* TABLA FISCAL */
+
+.fiscal-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+
+/* CELDAS FISCALES */
+
+.fiscal-table td{
+
+    padding:5px 4px;
+
+    font-size:8px;
+
+    vertical-align:top;
+}
+
+
+/* =========================================================
+   TABLA CLIENTES
+========================================================= */
+
+.clientes-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-bottom:18px;
+}
+
+
+/* =========================================================
+   TARJETAS EMISOR / RECEPTOR
+========================================================= */
 
 .section{
 
-border:1px solid #ddd;
+    border:
+    1px solid #d6dbe3;
 
-padding:10px;
+    background:#fcfcfc;
 
-margin-top:10px;
+    padding:12px;
 
+    vertical-align:top;
+
+    min-height:95px;
 }
+
+
+/* TITULO SECCION */
 
 .section-title{
 
-font-size:11px;
+    color:#7a1f2b;
 
-color:#7a1f2b;
+    font-size:10px;
 
-font-weight:bold;
+    font-weight:bold;
 
-border-bottom:2px solid #7a1f2b;
+    margin-bottom:10px;
 
-padding-bottom:5px;
+    border-bottom:
+    1px solid #e5e7eb;
 
+    padding-bottom:5px;
 }
 
-table{
 
-width:100%;
+/* PARRAFOS SECCION */
 
-border-collapse:collapse;
+.section p{
 
-table-layout:fixed;
+    margin:0 0 6px 0;
 
-margin-top:15px;
-
+    font-size:8px;
 }
 
-th{
 
-background:#7a1f2b;
+/* =========================================================
+   TABLA CONCEPTOS
+========================================================= */
 
-color:white;
+.conceptos{
 
-padding:8px;
+    width:100%;
 
-font-size:9px;
+    border-collapse:collapse;
 
+    margin-bottom:20px;
 }
 
-td{
 
-padding:8px;
+/* ENCABEZADOS TABLA */
 
-border:1px solid #ddd;
+.conceptos th{
 
-font-size:9px;
+    background:#7a1f2b;
 
+    color:white;
+
+    padding:9px;
+
+    font-size:8px;
+
+    font-weight:bold;
+
+    text-align:left;
 }
 
-.total-box{
 
-width:240px;
+/* CELDAS TABLA */
 
-margin-left:auto;
+.conceptos td{
 
-margin-top:20px;
+    border-bottom:
+    1px solid #e5e7eb;
 
-border:2px solid #7a1f2b;
+    padding:9px;
 
-padding:12px;
+    font-size:8px;
 
+    vertical-align:top;
 }
 
-.total{
 
-font-size:18px;
+/* EFECTO FILAS */
 
-font-weight:bold;
+.conceptos tr:nth-child(even){
 
-color:#7a1f2b;
-
+    background:#fafafa;
 }
+
+
+/* ALINEACIONES */
+
+.left{
+
+    text-align:left;
+}
+
+.right{
+
+    text-align:right;
+}
+
+
+/* =========================================================
+   BLOQUE TOTALES
+========================================================= */
+
+.totales{
+
+    width:260px;
+
+    margin-left:auto;
+
+    margin-bottom:22px;
+}
+
+
+/* TABLA TOTALES */
+
+.totales table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    border:
+    1px solid #d6dbe3;
+}
+
+
+/* CELDAS TOTALES */
+
+.totales td{
+
+    padding:8px 10px;
+
+    font-size:9px;
+
+    border-bottom:
+    1px solid #e5e7eb;
+}
+
+
+/* TOTAL FINAL */
+
+.total-final td{
+
+    background:#faf5f6;
+
+    color:#7a1f2b;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    border-top:
+    2px solid #7a1f2b;
+}
+
+
+/* =========================================================
+   AREA INFERIOR
+========================================================= */
+
+.bottom-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:12px;
+}
+
+
+/* =========================================================
+   QR SAT
+========================================================= */
+
+.qr{
+
+    padding-top:4px;
+}
+
+
+/* IMAGEN QR */
+
+.qr img{
+
+    border:
+    1px solid #d1d5db;
+
+    padding:6px;
+
+    background:white;
+}
+
+
+/* =========================================================
+   INFORMACION TIMBRADO
+========================================================= */
+
+.timbrado{
+
+    border:
+    1px solid #d6dbe3;
+
+    background:#fafafa;
+
+    padding:12px;
+}
+
+
+/* TEXTO NORMAL TIMBRADO */
+
+.timbrado p{
+
+    margin:0 0 7px 0;
+
+    font-size:8px;
+}
+
+
+/* TEXO LARGO SAT */
+
+.texto-fiscal{
+
+    font-size:7px;
+
+    color:#374151;
+
+    line-height:1.3;
+
+    text-align:justify;
+
+    word-break:break-all;
+
+    border:
+    1px solid #e5e7eb;
+
+    background:white;
+
+    padding:8px;
+
+    margin-bottom:10px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
 
 .footer{
 
-margin-top:30px;
+    margin-top:28px;
 
-font-size:8px;
+    padding-top:10px;
 
-text-align:center;
+    border-top:
+    1px solid #d6dbe3;
 
-color:#777;
+    text-align:center;
 
+    font-size:8px;
+
+    color:#6b7280;
 }
