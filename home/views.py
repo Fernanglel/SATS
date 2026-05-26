@@ -439,12 +439,6 @@ def obtener_datos_factura(request):
 # PDF FACTURA
 # =========================
 
-from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
-from xhtml2pdf import pisa
-from io import BytesIO
-
-
 @csrf_exempt
 def generar_pdf(request):
 
@@ -461,25 +455,29 @@ def generar_pdf(request):
 
             "factura": {
 
-                "serie": data.get("serie"),
+                "serie":
+                data.get("serie"),
 
-                "folio": data.get("folio"),
+                "folio":
+                data.get("folio"),
 
-                "uuid": str(uuid.uuid4()),
+                "uuid":
+                str(uuid.uuid4()),
 
-                "fecha": data.get("fecha"),
+                "fecha":
+                data.get("fecha"),
 
                 "nombre_emisor":
-request.session.get(
-    "cliente_nombre",
-    data.get("nombreEmisor")
-),
+                request.session.get(
+                    "cliente_nombre",
+                    data.get("nombreEmisor")
+                ),
 
-"rfc_emisor":
-request.session.get(
-    "cliente_rfc",
-    data.get("rfcEmisor")
-),
+                "rfc_emisor":
+                request.session.get(
+                    "cliente_rfc",
+                    data.get("rfcEmisor")
+                ),
 
                 "nombre_receptor":
                 data.get("nombreReceptor"),
@@ -507,13 +505,28 @@ request.session.get(
                         data.get("descripcion"),
 
                         "cantidad":
-                        data.get("cantidad"),
+                        float(
+                            data.get(
+                                "cantidad",
+                                0
+                            ) or 0
+                        ),
 
                         "valor_unitario":
-                        data.get("precio"),
+                        float(
+                            data.get(
+                                "precio",
+                                0
+                            ) or 0
+                        ),
 
                         "importe":
-                        float(data.get("importe,0") or 0),
+                        float(
+                            data.get(
+                                "importe",
+                                0
+                            ) or 0
+                        )
 
                     }
 
@@ -539,15 +552,14 @@ request.session.get(
                 ""
             )
 
-            path = os.path.join(
+            return os.path.join(
                 settings.BASE_DIR,
                 "static",
                 ruta
             )
 
-            return path
-
         return uri
+
 
     pdf = pisa.CreatePDF(
 
@@ -571,26 +583,31 @@ request.session.get(
 
     nombre = generar_nombre_factura(
 
-        data.get(
-            "rfcEmisor",
-            "XAXX010101000"
-        ),
-
-        data.get(
-            "serie",
-            "A"
+        request.session.get(
+            "cliente_rfc",
+            data.get(
+                "rfcEmisor",
+                "XAXX010101000"
+            )
         ),
 
         str(
+            data.get(
+                "serie",
+                "A"
+            )
+        ),
 
+        str(
             data.get(
                 "folio",
                 "0001"
             )
-
         )
 
     )
+
+    print("PDF:", nombre)
 
     response = HttpResponse(
 
@@ -607,4 +624,3 @@ request.session.get(
     )
 
     return response
-   

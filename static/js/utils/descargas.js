@@ -392,18 +392,71 @@ throw new Error(
 
 }
 
-const blob=
+// ====================
+// DESCARGAR CON NOMBRE
+// ====================
+
+const blob =
 await response.blob();
 
-const url=
+const url =
 URL.createObjectURL(
-blob
+    blob
 );
 
-window.open(
-url,
-"_blank"
+let nombre =
+"FacturaSAT.pdf";
+
+const disposition =
+
+response.headers.get(
+    "Content-Disposition"
 );
+
+if(disposition){
+
+    const match =
+
+    disposition.match(
+        /filename="?([^"]+)"?/
+    );
+
+    if(
+
+        match &&
+        match[1]
+
+    ){
+
+        nombre =
+        match[1];
+
+    }
+
+}
+
+const link =
+
+document.createElement(
+"a"
+);
+
+link.href =
+url;
+
+link.download =
+nombre;
+
+document.body.appendChild(
+link
+);
+
+link.click();
+
+link.remove();
+
+URL.revokeObjectURL(
+url);
 
 }
 
