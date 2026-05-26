@@ -2,6 +2,12 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from io import BytesIO
+
 from .models import Cliente
 from .bridge import FacturaDB
 
@@ -11,6 +17,11 @@ import random
 
 from datetime import datetime
 
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+import json
 
 # =========================
 # GENERAR NOMBRE FACTURA
@@ -404,85 +415,137 @@ def obtener_datos_factura(request):
 # =========================
 # PDF FACTURA   
 # =========================
-from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+from xhtml2pdf import pisa
+from io import BytesIO
+from home import views
 
-def generar_qr_base64(texto):
+@csrf_exempt
+def generar_pdf(request):
 
-    qr = qrcode.make(texto)
+    if request.method != "POST":
 
-    buffer = BytesIO()
+        return HttpResponse(status=405)
 
-    qr.save(buffer, format="PNG")
-
-    img_str = base64.b64encode(buffer.getvalue()).decode()
-
-    return f"data:image/png;base64,{img_str}"
-
-
-
-def generar_pdf_sat(request):
-
-    factura = {
-
-        "rfc_emisor": "AAA010101AAA",
-        "nombre_emisor": "EMPRESA DEMO SA DE CV",
-        "regimen": "601 General de Ley",
-
-        "uuid": "7A2D-44FF-9911",
-        "serie": "A",
-        "folio": "1001",
-        "fecha": "2026-05-25 18:00",
-
-        "rfc_receptor": "XAXX010101000",
-        "nombre_receptor": "PUBLICO GENERAL",
-
-        "uso_cfdi": "G03",
-        "metodo_pago": "PUE",
-
-        "subtotal": "10,000.00",
-        "iva": "1,600.00",
-        "total": "11,600.00",
-
-        "sello_cfdi": "ASDASDASDASDASDASDASDASDASDASDASDASD",
-
-        "cadena_original": "||1.1|AABBCCDD|SAT||",
-
-        "conceptos": [
-            {
-                "clave": "81112100",
-                "descripcion": "Servicio profesional",
-                "cantidad": 1,
-                "unidad": "E48",
-                "valor_unitario": "10,000.00",
-                "importe": "10,000.00"
-            }
-        ]
-    }
-
-    qr_base64 = generar_qr_base64(
-        factura["uuid"]
+    data = json.loads(
+        request.body
     )
 
-    html_string = render_to_string(
-        "pdf/factura_sat.html",
+    html = render_to_string(
+
+        "PDF/factura_sat.html",
+
         {
-            "factura": factura,
-            "qr_base64": qr_base64
+
+            "factura":{
+
+                "serie":
+                data.get("serie"),
+
+                "folio":
+                data.get("folio"),
+
+                "uuid":
+                str(uuid.uuid4()),
+
+                "fecha":
+                data.get("fecha"),
+
+                "nombre_emisor":
+                data.get("nombreEmisor"),
+
+                "rfc_emisor":
+                data.get("rfcEmisor"),
+
+                "nombre_receptor":
+                data.get("nombreReceptor"),
+
+                "rfc_receptor":
+                data.get("rfcReceptor"),
+
+                "subtotal":
+                data.get("subtotal"),
+
+                "iva":
+                data.get("iva"),
+
+                "total":
+                data.get("total"),
+
+                "conceptos":[
+
+                    {
+
+                        "clave":
+                        data.get(
+                            "claveConcepto"
+                        ),
+
+                        "descripcion":
+                        data.get(
+                            "descripcion"
+                        ),
+
+                        "cantidad":
+                        data.get(
+                            "cantidad"
+                        ),
+
+                        "valor_unitario":
+                        data.get(
+                            "precio"
+                        ),
+
+                        "importe":
+                        data.get(
+                            "importe"
+                        )
+
+                    }
+
+                ]
+
+            }
+
         }
+    
     )
 
-    pdf = HTML(
-        string=html_string,
-        base_url=request.build_absolute_uri()
-    ).write_pdf()
+    resultado = BytesIO()
+
+    pdf = pisa.CreatePDF(
+
+        html,
+
+        dest=resultado
+
+    )
+
+    if pdf.err:
+
+        return HttpResponse(
+
+            "Error generando PDF",
+
+            status=500
+
+        )
 
     response = HttpResponse(
-        pdf,
-        content_type='application/pdf'
+
+        resultado.getvalue(),
+
+        content_type="application/pdf"
+
     )
 
-    response['Content-Disposition'] = (
-        'inline; filename="factura_sat.pdf"'
+    response[
+        "Content-Disposition"
+    ] = (
+        'attachment; filename="FacturaSAT.pdf"'
     )
 
     return response
+
+    

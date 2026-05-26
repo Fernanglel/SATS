@@ -293,71 +293,64 @@ $${d.total}
 // PDF
 // ====================
 
-export function descargarPDF(){
+export async function descargarPDF(){
 
     const factura =
     localStorage.getItem("factura");
 
     if(!factura){
 
-        alert(
-            "Primero genera una factura"
-        );
-
+        alert("Primero genera una factura");
         return;
 
     }
 
-    const d = JSON.parse(factura);
+    try{
 
-    const nombre =
-    generarNombreArchivo(d);
+        const res =
+        await fetch(
+            "/generar-pdf/",
+            {
+                method:"POST",
 
-    const elemento =
-    document.getElementById(
-        "facturaPDF"
-    );
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
 
-    const opciones = {
+                body:factura
+            }
+        );
 
-        margin: 5,
+        const blob =
+        await res.blob();
 
-        filename:
-        `${nombre}.pdf`,
+        const url =
+        window.URL.createObjectURL(
+            blob
+        );
 
-        image: {
+        const a =
+        document.createElement("a");
 
-            type: "jpeg",
+        a.href = url;
 
-            quality: 1
+        a.download =
+        "FacturaSAT.pdf";
 
-        },
+        a.click();
 
-        html2canvas: {
+    }
 
-            scale: 2
+    catch(e){
 
-        },
+        console.log(e);
 
-        jsPDF: {
+        alert(
+            "Error generando PDF"
+        );
 
-            unit: "mm",
-
-            format: "a4",
-
-            orientation: "portrait"
-
-        }
-
-    };
-
-    html2pdf()
-
-        .set(opciones)
-
-        .from(elemento)
-
-        .save();
+    }
 
 }
 

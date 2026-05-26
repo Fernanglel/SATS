@@ -15,9 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from home.views import generar_pdf_sat
 from django.contrib import admin
 from django.urls import path
+from home.views import generar_pdf
 from home import views
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('home/', views.home_view, name='home'),
     path('factura/', views.factura, name='factura'),
     path('historial/', views.historial, name='historial'),
-    path('pdf-sat/<str:uuid>/', generar_pdf_sat, name='pdf_sat'),
+    path("generar-pdf/", views.generar_pdf, name="generar_pdf"),
     path('guardar-factura/', views.guardar_factura),
     path('login/', views.login_view),
     path('obtener-datos-factura/',
