@@ -157,7 +157,7 @@ desc:"Para devoluciones"
 Nomina:{
 color:"SATcolor",
 icono:"/static/icons/nomina.png",
-desc:"Para devoluciones"
+desc:"Para  empleados"
 },
 Empresarial:{
 color:"SATcolor",

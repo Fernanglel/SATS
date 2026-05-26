@@ -5,64 +5,126 @@
     <meta charset="utf-8">
 
     <link rel="stylesheet" href="{% static 'styles/styles_pdf.css' %}">
-    {% load static %}
 </head>
 
 <body>
 
 <div class="header">
-    <div>
-        <h1>FACTURA</h1>
-        <p>{{ factura.serie }} - {{ factura.folio }}</p>
-    </div>
 
-    <div>
-        <p><b>UUID:</b> {{ factura.uuid }}</p>
-        <p><b>Fecha:</b> {{ factura.fecha }}</p>
-    </div>
+<h1>CFDI</h1>
+
+<p>Serie {{ factura.serie }} | Folio {{ factura.folio }}</p>
+
+<p>UUID: {{ factura.uuid }}</p>
+
 </div>
 
-<div class="info">
-    <p><b>Emisor:</b> {{ factura.nombre_emisor }}</p>
-    <p><b>RFC:</b> {{ factura.rfc_emisor }}</p>
+
+<div class="section">
+
+<div class="section-title">
+DATOS DEL EMISOR
 </div>
 
-<div class="info">
-    <p><b>Receptor:</b> {{ factura.nombre_receptor }}</p>
-    <p><b>RFC:</b> {{ factura.rfc_receptor }}</p>
+<p><span class="label">Nombre:</span>
+{{ factura.nombre_emisor }}</p>
+
+<p><span class="label">RFC:</span>
+{{ factura.rfc_emisor }}</p>
+
 </div>
+
+
+<div class="section">
+
+<div class="section-title">
+DATOS DEL RECEPTOR
+</div>
+
+<p><span class="label">Nombre:</span>
+{{ factura.nombre_receptor }}</p>
+
+<p><span class="label">RFC:</span>
+{{ factura.rfc_receptor }}</p>
+
+</div>
+
 
 <table>
-    <thead>
-        <tr>
-            <th>Clave</th>
-            <th>Descripción</th>
-            <th>Cant</th>
-            <th>Unitario</th>
-            <th>Importe</th>
-        </tr>
-    </thead>
 
-    <tbody>
-        {% for c in factura.conceptos %}
-        <tr>
-            <td>{{ c.clave }}</td>
-            <td>{{ c.descripcion }}</td>
-            <td>{{ c.cantidad }}</td>
-            <td>{{ c.valor_unitario }}</td>
-            <td>{{ c.importe }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+<thead>
+
+<tr>
+
+<th>Clave</th>
+
+<th>Descripción</th>
+
+<th>Cantidad</th>
+
+<th>Precio</th>
+
+<th>Importe</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for c in factura.conceptos %}
+
+<tr>
+
+<td>{{ c.clave }}</td>
+
+<td>{{ c.descripcion }}</td>
+
+<td>{{ c.cantidad }}</td>
+
+<td>${{ c.valor_unitario }}</td>
+
+<td>${{ c.importe }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
 </table>
 
-<div class="totales">
-    <p>Subtotal: {{ factura.subtotal }}</p>
-    <p>IVA: {{ factura.iva }}</p>
-    <p><b>Total: {{ factura.total }}</b></p>
+
+<div class="total-box">
+
+<p>Subtotal:
+${{ factura.subtotal }}</p>
+
+<p>IVA:
+${{ factura.iva }}</p>
+
+<hr>
+
+<p class="total">
+TOTAL:
+${{ factura.total }}
+</p>
+
 </div>
 
+
+{% if qr_base64 %}
+<div class="qr">
 <img src="{{ qr_base64 }}" width="120">
+</div>
+{% endif %}
+
+
+<div class="footer">
+
+Documento generado electrónicamente · SATS
+
+</div>
 
 </body>
 </html>

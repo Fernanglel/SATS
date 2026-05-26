@@ -1,61 +1,132 @@
+@page{
+size:A4;
+margin:18px;
+}
+
 body{
-
-background:white;
-
-padding:40px;
-
-font-family:Arial;
-
+font-family:Helvetica;
+color:#2c2c2c;
+font-size:10px;
 }
 
 .header{
+background:#7a1f2b;
+color:white;
+padding:18px;
+border-radius:8px;
+}
+
+.header h1{
+font-size:22px;
+margin-bottom:4px;
+}
+
+.section{
+
+border:1px solid #d8d8d8;
+
+margin-top:15px;
+
+padding:10px;
+
+border-radius:6px;
+}
+
+.section-title{
+
+color:#7a1f2b;
+
+font-size:12px;
+
+border-bottom:2px solid #7a1f2b;
+
+padding-bottom:5px;
+
+margin-bottom:8px;
+
+}
+
+.row{
+margin-bottom:6px;
+}
+
+.label{
+font-weight:bold;
+color:#666;
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-top:18px;
+
+}
+
+thead{
 
 background:#7a1f2b;
 
 color:white;
 
-padding:18px;
-
-border-radius:10px;
-
-}
-
-.info{
-
-border:1px solid #ddd;
-
-padding:14px;
-
-margin-top:10px;
-
-}
-
-table{
-
-margin-top:20px;
-
 }
 
 th{
 
-background:#7a1f2b;
+padding:10px;
+
+font-size:10px;
 
 }
 
-.totales{
+td{
 
-width:300px;
+padding:8px;
 
-margin-left:auto;
-
-border-top:3px solid #7a1f2b;
-
-padding-top:10px;
+border-bottom:1px solid #ddd;
 
 }
 
-img{
+.total-box{
 
 margin-top:20px;
 
+margin-left:320px;
+
+width:230px;
+
+border:2px solid #7a1f2b;
+
+padding:12px;
+
+background:#faf6f7;
+
+}
+
+.total{
+
+font-size:18px;
+
+font-weight:bold;
+
+color:#7a1f2b;
+
+}
+
+.footer{
+
+margin-top:30px;
+
+font-size:8px;
+
+color:#777;
+
+text-align:center;
+
+}
+
+.qr{
+margin-top:20px;
 }

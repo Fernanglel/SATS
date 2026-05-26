@@ -22,7 +22,8 @@ from io import BytesIO
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 import json
-
+from django.conf import settings
+import os
 # =========================
 # GENERAR NOMBRE FACTURA
 # =========================
@@ -487,20 +488,172 @@ def generar_pdf(request):
 
     )
 
+# =========================
+# PDF FACTURA
+# =========================
+
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+from xhtml2pdf import pisa
+from io import BytesIO
+
+
+@csrf_exempt
+def generar_pdf(request):
+
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    data = json.loads(request.body)
+
+    html = render_to_string(
+
+        "PDF/factura_sat.html",
+
+        {
+
+            "factura": {
+
+                "serie": data.get("serie"),
+
+                "folio": data.get("folio"),
+
+                "uuid": str(uuid.uuid4()),
+
+                "fecha": data.get("fecha"),
+
+                "nombre_emisor":
+                data.get("nombreEmisor"),
+
+                "rfc_emisor":
+                data.get("rfcEmisor"),
+
+                "nombre_receptor":
+                data.get("nombreReceptor"),
+
+                "rfc_receptor":
+                data.get("rfcReceptor"),
+
+                "subtotal":
+                data.get("subtotal"),
+
+                "iva":
+                data.get("iva"),
+
+                "total":
+                data.get("total"),
+
+                "conceptos": [
+
+                    {
+
+                        "clave":
+                        data.get("claveConcepto"),
+
+                        "descripcion":
+                        data.get("descripcion"),
+
+                        "cantidad":
+                        data.get("cantidad"),
+
+                        "valor_unitario":
+                        data.get("precio"),
+
+                        "importe":
+                        data.get("importe")
+
+                    }
+
+                ]
+
+            },
+
+            "qr_base64":
+            data.get("qr", "")
+
+        }
+
+    )
+
     resultado = BytesIO()
 
+    def link_callback(uri, rel):
+
+        if uri.startswith(settings.STATIC_URL):
+
+            ruta = uri.replace(
+                settings.STATIC_URL,
+                ""
+            )
+
+            path = os.path.join(
+                settings.BASE_DIR,
+                "static",
+                ruta
+            )
+
+            return path
+
+        return uri
+
     pdf = pisa.CreatePDF(
+
         html,
-        dest=resultado
+
+        dest=resultado,
+
+        link_callback=link_callback
+
     )
 
     if pdf.err:
 
         return HttpResponse(
+
             "Error generando PDF",
+
             status=500
+
         )
 
+    nombre = generar_nombre_factura(
+
+        data.get(
+            "rfcEmisor",
+            "XAXX010101000"
+        ),
+
+        data.get(
+            "serie",
+            "A"
+        ),
+
+        str(
+
+            data.get(
+                "folio",
+                "0001"
+            )
+
+        )
+
+    )
+
+    response = HttpResponse(
+
+        resultado.getvalue(),
+
+        content_type="application/pdf"
+
+    )
+
+    response["Content-Disposition"] = (
+
+        f'attachment; filename="{nombre}"'
+
+    )
+
+    return response
     # =========================
     # GENERAR NOMBRE
     # =========================
