@@ -419,38 +419,26 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from xhtml2pdf import pisa
 from io import BytesIO
-from home import views
 
 @csrf_exempt
 def generar_pdf(request):
 
     if request.method != "POST":
-
         return HttpResponse(status=405)
 
-    data = json.loads(
-        request.body
-    )
+    data = json.loads(request.body)
 
     html = render_to_string(
 
         "PDF/factura_sat.html",
 
         {
+            "factura": {
 
-            "factura":{
-
-                "serie":
-                data.get("serie"),
-
-                "folio":
-                data.get("folio"),
-
-                "uuid":
-                str(uuid.uuid4()),
-
-                "fecha":
-                data.get("fecha"),
+                "serie": data.get("serie"),
+                "folio": data.get("folio"),
+                "uuid": str(uuid.uuid4()),
+                "fecha": data.get("fecha"),
 
                 "nombre_emisor":
                 data.get("nombreEmisor"),
@@ -473,79 +461,86 @@ def generar_pdf(request):
                 "total":
                 data.get("total"),
 
-                "conceptos":[
+                "conceptos": [
 
                     {
-
                         "clave":
-                        data.get(
-                            "claveConcepto"
-                        ),
+                        data.get("claveConcepto"),
 
                         "descripcion":
-                        data.get(
-                            "descripcion"
-                        ),
+                        data.get("descripcion"),
 
                         "cantidad":
-                        data.get(
-                            "cantidad"
-                        ),
+                        data.get("cantidad"),
 
                         "valor_unitario":
-                        data.get(
-                            "precio"
-                        ),
+                        data.get("precio"),
 
                         "importe":
-                        data.get(
-                            "importe"
-                        )
-
+                        data.get("importe")
                     }
 
                 ]
 
             }
-
         }
-    
+
     )
 
     resultado = BytesIO()
 
     pdf = pisa.CreatePDF(
-
         html,
-
         dest=resultado
-
     )
 
     if pdf.err:
 
         return HttpResponse(
-
             "Error generando PDF",
-
             status=500
-
         )
 
-    response = HttpResponse(
+    # =========================
+    # GENERAR NOMBRE
+    # =========================
 
-        resultado.getvalue(),
-
-        content_type="application/pdf"
-
+    rfc = (
+        data.get(
+            "rfcEmisor",
+            "XAXX010101000"
+        )
+        .replace(" ", "")
+        .upper()
     )
 
-    response[
-        "Content-Disposition"
-    ] = (
-        'attachment; filename="FacturaSAT.pdf"'
+    serie = data.get(
+        "serie",
+        "A"
+    )
+
+    folio = str(
+        data.get(
+            "folio",
+            "0001"
+        )
+    )
+
+    nombre_archivo = generar_nombre_factura(
+        rfc,
+        serie,
+        folio
+    )
+
+    print("PDF:", nombre_archivo)
+
+    response = HttpResponse(
+        resultado.getvalue(),
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = (
+        f'attachment; filename="{nombre_archivo}"'
     )
 
     return response
-
-    

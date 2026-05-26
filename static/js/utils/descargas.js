@@ -300,54 +300,126 @@ export async function descargarPDF(){
 
     if(!factura){
 
-        alert("Primero genera una factura");
+        alert(
+            "Primero genera una factura"
+        );
+
         return;
 
     }
 
     try{
 
-        const res =
+        const data =
+        JSON.parse(factura);
+
+        const response =
         await fetch(
+
             "/generar-pdf/",
+
             {
+
                 method:"POST",
 
                 headers:{
+
                     "Content-Type":
                     "application/json"
+
                 },
 
-                body:factura
+                body:
+                JSON.stringify(data)
+
             }
+
         );
 
+        if(!response.ok){
+
+            throw new Error(
+                "Error generando PDF"
+            );
+
+        }
+
         const blob =
-        await res.blob();
+        await response.blob();
 
         const url =
-        window.URL.createObjectURL(
+        URL.createObjectURL(
             blob
         );
 
-        const a =
-        document.createElement("a");
+        const link =
+        document.createElement(
+            "a"
+        );
 
-        a.href = url;
+        // ====================
+        // NOMBRE DEL BACKEND
+        // ====================
 
-        a.download =
+        let nombre =
         "FacturaSAT.pdf";
 
-        a.click();
+        const disposition =
+
+        response.headers.get(
+            "Content-Disposition"
+        );
+
+        if(disposition){
+
+            const match =
+
+            disposition.match(
+                /filename="?([^"]+)"?/
+            );
+
+            if(
+
+                match &&
+                match[1]
+
+            ){
+
+                nombre =
+                match[1];
+
+            }
+
+        }
+
+        link.href =
+        url;
+
+        link.download =
+        nombre;
+
+        document.body.appendChild(
+            link
+        );
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(
+            url
+        );
 
     }
 
-    catch(e){
+    catch(error){
 
-        console.log(e);
+        console.error(
+            error
+        );
 
         alert(
-            "Error generando PDF"
+            "No se pudo generar PDF"
         );
 
     }
